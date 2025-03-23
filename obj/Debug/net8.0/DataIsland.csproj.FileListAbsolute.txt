@@ -1,0 +1,12 @@
+E:\CSharpProjects\CardGo\CardGo\bin\Debug\net8.0\CardGo.deps.json
+E:\CSharpProjects\CardGo\CardGo\bin\Debug\net8.0\CardGo.dll
+E:\CSharpProjects\CardGo\CardGo\bin\Debug\net8.0\CardGo.pdb
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.GeneratedMSBuildEditorConfig.editorconfig
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.AssemblyInfoInputs.cache
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.AssemblyInfo.cs
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.csproj.CoreCompileInputs.cache
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.dll
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\refint\CardGo.dll
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.pdb
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\ref\CardGo.dll
+E:\CSharpProjects\CardGo\CardGo\obj\Debug\net8.0\CardGo.csproj.AssemblyReference.cache

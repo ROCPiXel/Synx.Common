@@ -1,0 +1,5 @@
+E:\CodeSpace\CardGo\CardGo.Common\obj\Debug\net6.0\CardGo.Common.csproj.AssemblyReference.cache
+E:\CodeSpace\CardGo\CardGo.Common\obj\Debug\net6.0\CardGo.Common.GeneratedMSBuildEditorConfig.editorconfig
+E:\CodeSpace\CardGo\CardGo.Common\obj\Debug\net6.0\CardGo.Common.AssemblyInfoInputs.cache
+E:\CodeSpace\CardGo\CardGo.Common\obj\Debug\net6.0\CardGo.Common.AssemblyInfo.cs
+E:\CodeSpace\CardGo\CardGo.Common\obj\Debug\net6.0\CardGo.Common.csproj.CoreCompileInputs.cache
