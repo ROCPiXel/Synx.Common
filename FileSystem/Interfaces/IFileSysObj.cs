@@ -1,8 +1,7 @@
-﻿using System.Management;
-using Synx.Common.Enums;
+﻿using Synx.Common.Enums;
 using Synx.Common.FileSystem.Structures;
 
-namespace Synx.Common.Base;
+namespace Synx.Common.FileSystem.Interfaces;
 
 /// <summary>
 /// IFileSysObj: Interface

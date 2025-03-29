@@ -121,11 +121,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\CodeSpace\\Synx.Laboratory\\Shared\\Synx.Common\\Synx.Common.csproj",
+      "projectUniqueName": "E:\\CodeSpace\\Synx.Laboratory\\Lib\\Synx.Common\\Synx.Common.csproj",
       "projectName": "Synx.Common",
-      "projectPath": "E:\\CodeSpace\\Synx.Laboratory\\Shared\\Synx.Common\\Synx.Common.csproj",
+      "projectPath": "E:\\CodeSpace\\Synx.Laboratory\\Lib\\Synx.Common\\Synx.Common.csproj",
       "packagesPath": "C:\\Users\\RPiXel\\.nuget\\packages\\",
-      "outputPath": "E:\\CodeSpace\\Synx.Laboratory\\Shared\\Synx.Common\\obj\\",
+      "outputPath": "E:\\CodeSpace\\Synx.Laboratory\\Lib\\Synx.Common\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -1,4 +1,4 @@
-﻿namespace Synx.Common.Base;
+﻿namespace Synx.Common.FileSystem.Interfaces;
 
 /// <summary>
 /// IFileSysAct: Interface

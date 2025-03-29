@@ -1,6 +1,7 @@
 ﻿using Synx.Common.FileSystem.Structures;
 using Synx.Common.Base;
 using Synx.Common.Enums;
+using Synx.Common.FileSystem.Interfaces;
 
 namespace Synx.Common.Utils;
 
