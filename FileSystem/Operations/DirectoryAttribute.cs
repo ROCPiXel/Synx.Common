@@ -1,6 +1,6 @@
 ﻿using Synx.Common.FileSystem.Structures;
 
-namespace Synx.Common.FileSystem.Attributes;
+namespace Synx.Common.FileSystem.Operations;
 
 public static class DirectoryAttribute
 {

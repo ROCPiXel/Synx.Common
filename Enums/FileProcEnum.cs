@@ -6,19 +6,13 @@
 /// </summary>
 public enum CreationMethod
 {
-    /// <summary>
-    /// 保持，默认方法
-    /// </summary>
+    /// <summary>保持，默认方法</summary>
     Keep = 0,
     
-    /// <summary>
-    /// 覆盖，极其危险的操作，建议进行二次确认
-    /// </summary>
+    /// <summary>覆盖，极其危险的操作，建议进行二次确认</summary>
     Cover = 1,
     
-    /// <summary>
-    /// 新建，如果目标已经存在会新建唯一路径，其余保持默认
-    /// </summary>
+    /// <summary>新建，如果目标已经存在会新建唯一路径，其余保持默认</summary>
     New = 2,
 }
 

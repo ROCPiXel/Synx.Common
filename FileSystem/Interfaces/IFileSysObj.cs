@@ -14,17 +14,19 @@ public interface IFileSysObj<TFile>
     /// ObjectType: iIndex
     /// 对象类型
     /// </summary>
-    public static abstract FileObjectType ObjectType { get; }
+    static abstract FileObjectType ObjectType { get; }
+    
+    // TODO: 抽出IFileSysAct
     
     /// <summary>
     /// iIndex
     /// 基本信息，支持不存在的路径
     /// </summary>
-    public string Name { get; set; }
-    public string Extension { get; }
-    public CPath Path { get; set; }
-    public CPath ParentPath { get; set; }
-    public bool IsExists { get; set; }
+    string Name { get; set; }
+    string Extension { get; }
+    CPath Path { get; set; }
+    CPath ParentPath { get; set; }
+    bool IsExists { get; set; }
     
     /// <summary>
     /// FillInfo: iFunc, +3 Reloads
@@ -32,21 +34,21 @@ public interface IFileSysObj<TFile>
     /// </summary>
     /// <param name="name"></param>
     /// <param name="parentPath"></param>
-    public void FillInfo(string name, string parentPath);
-    public void FillInfo(string name, CPath parentPath);
-    public void FillInfo(CPath fullCPath);
+    void FillInfo(string name, string parentPath);
+    void FillInfo(string name, CPath parentPath);
+    void FillInfo(CPath fullCPath);
 
     /// <summary>
     /// GetInfo: iFunc
     /// 如果文件存在则需要获取信息
     /// </summary>
     /// <returns></returns>
-    public TFile GetInfo();
+    TFile GetInfo();
     
     /// <summary>
     /// Refresh: iFunc
     /// 刷新对象的信息
     /// </summary>
     /// <returns></returns>
-    public TFile Refresh();
+    TFile Refresh();
 }

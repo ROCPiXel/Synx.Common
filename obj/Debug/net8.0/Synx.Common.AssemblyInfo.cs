@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Synx.Common")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a82fc14f9e9bd98f069dd208175bd2fceeab2a90")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1769edf85a801fbe4672225482583311d974a88c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Synx.Common")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Synx.Common")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
