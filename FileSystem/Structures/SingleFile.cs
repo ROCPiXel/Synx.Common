@@ -6,7 +6,7 @@ using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
-public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
+public class SingleFile : IFileObjectAct, IFileObject<SingleFile>
 {
     // 对象类型
     public static FileObjectType ObjectType { get; } = FileObjectType.File;
@@ -42,11 +42,11 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     public Action<string, string> GenerateUniquePathAction { get; } 
         = (sourceFPath, suffix) => PathStringProc.GenerateFilePath(sourceFPath, suffix);
     
-    static bool IFileSysAct.GetExistsAction(string fullPath) => File.Exists(fullPath);
-    static void IFileSysAct.CreateAction(string fullPath) => File.Create(fullPath);
-    static void IFileSysAct.DeleteAction(string fullPath) => File.Delete(fullPath);
-    static void IFileSysAct.MoveAction(string sourceFPath, string targetFPath) =>  File.Move(sourceFPath, targetFPath);
-    static string IFileSysAct.GenerateUniquePathAction(string fullPath, string suffix) => PathStringProc.GenerateFilePath(fullPath, suffix);
+    static bool IFileObjectAct.Exists(string fullPath) => File.Exists(fullPath);
+    static void IFileObjectAct.Create(string fullPath) => File.Create(fullPath);
+    static void IFileObjectAct.Delete(string fullPath) => File.Delete(fullPath);
+    static void IFileObjectAct.Move(string sourceFPath, string targetFPath) =>  File.Move(sourceFPath, targetFPath);
+    static string IFileObjectAct.GenerateUniquePath(string fullPath, string suffix) => PathStringProc.GenerateFilePath(fullPath, suffix);
 
     /// <summary>
     /// 空对象

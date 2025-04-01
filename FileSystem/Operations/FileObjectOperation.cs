@@ -14,7 +14,7 @@ namespace Synx.Common.FileSystem.Operations;
 /// </summary>
 /// <typeparam name="TFileSysObj">文件系统中的对象，此处要求SingleDirectory/File</typeparam>
 public static class FileObjectOperation <TFileSysObj> 
-    where TFileSysObj: class, IFileSysAct, IFileSysObj<TFileSysObj>, new()
+    where TFileSysObj: class, IFileObjectAct, IFileObject<TFileSysObj>, new()
 {
     /// <summary>
     /// Create: tFunc
@@ -36,24 +36,24 @@ public static class FileObjectOperation <TFileSysObj>
         newFileSysObj.FillInfo(new CPath(newFullPath));
 
         // 基础情况：存在且保持，两者冲突
-        if (TFileSysObj.GetExistsAction(newFullPath) && creationMethod == CreationMethod.Keep) return null;
+        if (TFileSysObj.Exists(newFullPath) && creationMethod == CreationMethod.Keep) return null;
 
         try
         {
-            if (!TFileSysObj.GetExistsAction(newFullPath))
+            if (!TFileSysObj.Exists(newFullPath))
             {
-                TFileSysObj.CreateAction(newFullPath);
+                TFileSysObj.Create(newFullPath);
                 return newFileSysObj;
             }
 
             switch (creationMethod)
             {
                 case CreationMethod.New:
-                    TFileSysObj.CreateAction(uniqueFullPath);
+                    TFileSysObj.Create(uniqueFullPath);
                     newFileSysObj.FillInfo(new CPath(uniqueFullPath));
                     break;
                 case CreationMethod.Cover: // 注意：此选项将覆盖原有文件，谨慎操作
-                    TFileSysObj.DeleteAction(newFullPath);
+                    TFileSysObj.Delete(newFullPath);
                     break;
             }
         }
@@ -91,11 +91,11 @@ public static class FileObjectOperation <TFileSysObj>
     /// <returns></returns>
     public static bool Delete(string fullPath)
     {
-        if (!TFileSysObj.GetExistsAction(fullPath)) return false;
+        if (!TFileSysObj.Exists(fullPath)) return false;
         
         try
         {
-            TFileSysObj.DeleteAction(fullPath);
+            TFileSysObj.Delete(fullPath);
             return true;
         }
         catch (Exception ex)
@@ -130,7 +130,7 @@ public static class FileObjectOperation <TFileSysObj>
 
         try
         {
-            TFileSysObj.MoveAction(sourceFPath, uniquePath);
+            TFileSysObj.Move(sourceFPath, uniquePath);
         }
         catch (Exception ex)
         {

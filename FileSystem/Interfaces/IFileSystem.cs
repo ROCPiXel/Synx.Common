@@ -1,4 +1,6 @@
-﻿namespace Synx.Common.FileSystem.Interfaces;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Synx.Common.FileSystem.Interfaces;
 
 /// <summary>
 /// IFileSystem: Interface
@@ -7,9 +9,14 @@
 public interface IFileSystem
 {
     /// <summary>代表文件系统的流</summary>
-    public static FileStream FileStream { get; }
+    public FileStream? Open(string fullPath,
+                            FileMode mode,
+                            FileAccess? access,
+                            FileShare? share, 
+                            int? bufferSize,
+                            FileOptions? options);
 
-    /// <summary>文件信息操作</summary>
+    /// <summary>判断存在</summary>
     public bool Exists(string fullPath);
     
     /// <summary>创建</summary>

@@ -72,7 +72,7 @@ public static class PathStringProc
     }
 
     public static string GenerateUniquePath<TFileSysObj>(string basePath, string suffix = Definition.DefaultSuffix)
-        where TFileSysObj : IFileSysAct, IFileSysObj<TFileSysObj>
+        where TFileSysObj : IFileObjectAct, IFileObject<TFileSysObj>
     {
         string extension = string.Empty;
         if (TFileSysObj.ObjectType == FileObjectType.File)

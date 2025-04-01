@@ -6,7 +6,7 @@ using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
-public class SingleDirectory : IFileSysAct, IFileSysObj<SingleDirectory>
+public class SingleDirectory : IFileObjectAct, IFileObject<SingleDirectory>
 {
     // 对象类型
     public static FileObjectType ObjectType { get; } = FileObjectType.Directory;
@@ -34,11 +34,11 @@ public class SingleDirectory : IFileSysAct, IFileSysObj<SingleDirectory>
     public DateTime? AccessTime { get; set; }
     
     // 实现IFileSysAct
-    static bool IFileSysAct.GetExistsAction(string fullPath) => Directory.Exists(fullPath);
-    static void IFileSysAct.CreateAction(string fullPath) => Directory.CreateDirectory(fullPath);
-    static void IFileSysAct.DeleteAction(string fullPath) => Directory.Delete(fullPath);
-    static void IFileSysAct.MoveAction(string sourceFPath, string targetFPath) => Directory.Move(sourceFPath, targetFPath);
-    static string IFileSysAct.GenerateUniquePathAction(string fullPath, string suffix) => PathStringProc.GenerateDirectoryPath(fullPath, suffix);
+    static bool IFileObjectAct.Exists(string fullPath) => Directory.Exists(fullPath);
+    static void IFileObjectAct.Create(string fullPath) => Directory.CreateDirectory(fullPath);
+    static void IFileObjectAct.Delete(string fullPath) => Directory.Delete(fullPath);
+    static void IFileObjectAct.Move(string sourceFPath, string targetFPath) => Directory.Move(sourceFPath, targetFPath);
+    static string IFileObjectAct.GenerateUniquePath(string fullPath, string suffix) => PathStringProc.GenerateDirectoryPath(fullPath, suffix);
     
     // 构造函数
     public SingleDirectory()
