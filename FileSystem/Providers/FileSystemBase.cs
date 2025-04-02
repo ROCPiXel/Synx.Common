@@ -9,7 +9,7 @@ namespace Synx.Common.FileSystem.Providers;
 /// 提供文件系统操作，抽象模板
 /// </summary>
 public abstract class FileSystemBase<TFileSystem> : IFileSystem
-    where TFileSystem : FileSystemBase<TFileSystem>
+    where TFileSystem : class, IFileSystem
 {
     private static volatile TFileSystem? _instance = null;
     private static readonly object _instanceLock = new object();

@@ -1,4 +1,5 @@
 ﻿using Synx.Common.Enums;
+using Synx.Common.FileSystem.Providers;
 using Synx.Common.FileSystem.Structures;
 
 namespace Synx.Common.FileSystem.Interfaces;
@@ -7,15 +8,15 @@ namespace Synx.Common.FileSystem.Interfaces;
 /// IFileObject: Interface
 /// 单个文件对象的基础信息
 /// </summary>
-/// <typeparam name="TFile">文件对象类型</typeparam>
-public interface IFileObject<TFile>
+/// <typeparam name="TFileObject">文件对象类型</typeparam>
+public interface IFileObject<TFileObject>
 {
     /// <summary>
     /// ObjectType: iIndex
     /// 对象类型
     /// </summary>
     static abstract FileObjectType ObjectType { get; }
-    
+    static abstract IFileSystem FileSystem { get; }
     // TODO: 抽出IFileSysAct
     
     /// <summary>
@@ -43,12 +44,12 @@ public interface IFileObject<TFile>
     /// 如果文件存在则需要获取信息
     /// </summary>
     /// <returns></returns>
-    TFile GetInfo();
+    TFileObject GetInfo();
     
     /// <summary>
     /// Refresh: iFunc
     /// 刷新对象的信息
     /// </summary>
     /// <returns></returns>
-    TFile Refresh();
+    TFileObject Refresh();
 }

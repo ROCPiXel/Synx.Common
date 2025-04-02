@@ -5,7 +5,7 @@ using Synx.Common.FileSystem.Interfaces;
 
 namespace Synx.Common.Utils;
 
-public static class PathStringProc
+public static class PathHelper
 {
     /// <summary>
     /// GetExtension: Func
@@ -72,7 +72,7 @@ public static class PathStringProc
     }
 
     public static string GenerateUniquePath<TFileSysObj>(string basePath, string suffix = Definition.DefaultSuffix)
-        where TFileSysObj : IFileObjectAct, IFileObject<TFileSysObj>
+        where TFileSysObj : IFileObject<TFileSysObj>
     {
         string extension = string.Empty;
         if (TFileSysObj.ObjectType == FileObjectType.File)

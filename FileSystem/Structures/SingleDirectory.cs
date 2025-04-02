@@ -2,14 +2,16 @@
 using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
+using Synx.Common.FileSystem.Providers;
 using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
-public class SingleDirectory : IFileObjectAct, IFileObject<SingleDirectory>
+public class SingleDirectory : IFileObject<SingleDirectory>
 {
     // 对象类型
     public static FileObjectType ObjectType { get; } = FileObjectType.Directory;
+    public static IFileSystem FileSystem { get; } = DirectoryFileSystem.Instance;
     
     // 基本信息
     public string Name { get; set; } = string.Empty;
@@ -33,13 +35,6 @@ public class SingleDirectory : IFileObjectAct, IFileObject<SingleDirectory>
     public DateTime? ModifyTime { get; set; }
     public DateTime? AccessTime { get; set; }
     
-    // 实现IFileSysAct
-    static bool IFileObjectAct.Exists(string fullPath) => Directory.Exists(fullPath);
-    static void IFileObjectAct.Create(string fullPath) => Directory.CreateDirectory(fullPath);
-    static void IFileObjectAct.Delete(string fullPath) => Directory.Delete(fullPath);
-    static void IFileObjectAct.Move(string sourceFPath, string targetFPath) => Directory.Move(sourceFPath, targetFPath);
-    static string IFileObjectAct.GenerateUniquePath(string fullPath, string suffix) => PathStringProc.GenerateDirectoryPath(fullPath, suffix);
-    
     // 构造函数
     public SingleDirectory()
         : this(string.Empty, string.Empty) { }
@@ -56,8 +51,7 @@ public class SingleDirectory : IFileObjectAct, IFileObject<SingleDirectory>
     public SingleDirectory(DirectoryInfo directoryInfo)
         :this(directoryInfo.FullName) { }
         
-    
-    // 文件夹信息
+    // 以下：信息与属性相关
     /// <summary>
     /// 填充文件夹的对应信息
     /// </summary>
@@ -101,7 +95,7 @@ public class SingleDirectory : IFileObjectAct, IFileObject<SingleDirectory>
         return this;
     }
         
-    // 内容
+    // 以下：内容相关
     public SingleDirectory GetContent()
     {
         DirectoryAttribute.GetContent(this);

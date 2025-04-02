@@ -2,14 +2,16 @@
 using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
+using Synx.Common.FileSystem.Providers;
 using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
-public class SingleFile : IFileObjectAct, IFileObject<SingleFile>
+public class SingleFile : IFileObject<SingleFile>
 {
     // 对象类型
     public static FileObjectType ObjectType { get; } = FileObjectType.File;
+    public static IFileSystem FileSystem { get; } = SingleFileSystem.Instance;
     
     // 基本信息
     public string Name { get; set; } = string.Empty; // 名称
@@ -29,24 +31,6 @@ public class SingleFile : IFileObjectAct, IFileObject<SingleFile>
     public DateTime? ModifyTime { get; set; }
     public DateTime? AccessTime { get; set; }
     public string? OpenWith { get; set; } = string.Empty;
-    
-    // 实现IFileSysAct
-    public Func<string, bool> GetExistsAction { get; }
-        = (fullPath) => File.Exists(fullPath);
-    public Action<string> CreateAction { get; } 
-        = (fileFullPath) => File.Create(fileFullPath);
-    public Action<string> DeleteAction { get; } 
-        = (fileFullPath) => File.Delete(fileFullPath);
-    public Action<string, string> RenameAction { get; } 
-        = (sourceFPath, targetFPath) => File.Move(sourceFPath, targetFPath);
-    public Action<string, string> GenerateUniquePathAction { get; } 
-        = (sourceFPath, suffix) => PathStringProc.GenerateFilePath(sourceFPath, suffix);
-    
-    static bool IFileObjectAct.Exists(string fullPath) => File.Exists(fullPath);
-    static void IFileObjectAct.Create(string fullPath) => File.Create(fullPath);
-    static void IFileObjectAct.Delete(string fullPath) => File.Delete(fullPath);
-    static void IFileObjectAct.Move(string sourceFPath, string targetFPath) =>  File.Move(sourceFPath, targetFPath);
-    static string IFileObjectAct.GenerateUniquePath(string fullPath, string suffix) => PathStringProc.GenerateFilePath(fullPath, suffix);
 
     /// <summary>
     /// 空对象
@@ -86,8 +70,8 @@ public class SingleFile : IFileObjectAct, IFileObject<SingleFile>
     public void FillInfo(string name, string parentPath)
     {
         Name = name;
-        Extension = PathStringProc.GetExtension(Name);
-        RealName = PathStringProc.GetRealName(Name);
+        Extension = PathHelper.GetExtension(Name);
+        RealName = PathHelper.GetRealName(Name);
         ParentPath = new CPath(parentPath);
         Path = new CPath(parentPath + name);
         IsExists = File.Exists(Path.AbsolutePath);

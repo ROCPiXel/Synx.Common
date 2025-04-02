@@ -27,5 +27,5 @@ public class SingleFileSystem : FileSystemBase<SingleFileSystem>
     
     public override void Move(string sourceFPath, string targetFPath) =>  File.Move(sourceFPath, targetFPath);
     
-    public override string GenerateUniquePath(string fullPath, string suffix) => PathStringProc.GenerateFilePath(fullPath, suffix);
+    public override string GenerateUniquePath(string fullPath, string suffix) => PathHelper.GenerateFilePath(fullPath, suffix);
 }

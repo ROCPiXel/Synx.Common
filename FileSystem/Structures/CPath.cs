@@ -13,6 +13,7 @@ public struct CPath
     public string RelativePath { get; set; }
     public string Name { get; set; }
     public string ParentPath { get; set; }
+    public Uri? Uri { get; set; }
         
     public CPath(string path, string? basePath = null)
     {
@@ -31,7 +32,7 @@ public struct CPath
     }
 
     /// <summary>
-    /// ToString: fIOverride
+    /// ToString: fOverride
     /// 获取相对路径
     /// </summary>
     /// <returns>string-Path</returns>

@@ -28,5 +28,5 @@ public class DirectoryFileSystem : FileSystemBase<DirectoryFileSystem>
         => Directory.Move(sourceFPath, targetFPath);
     
     public override string GenerateUniquePath(string fullPath, string suffix) 
-        => PathStringProc.GenerateDirectoryPath(fullPath, suffix);
+        => PathHelper.GenerateDirectoryPath(fullPath, suffix);
 }

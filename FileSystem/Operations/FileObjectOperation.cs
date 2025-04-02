@@ -14,7 +14,7 @@ namespace Synx.Common.FileSystem.Operations;
 /// </summary>
 /// <typeparam name="TFileSysObj">文件系统中的对象，此处要求SingleDirectory/File</typeparam>
 public static class FileObjectOperation <TFileSysObj> 
-    where TFileSysObj: class, IFileObjectAct, IFileObject<TFileSysObj>, new()
+    where TFileSysObj: class, IFileObject<TFileSysObj>, new()
 {
     /// <summary>
     /// Create: tFunc
@@ -24,42 +24,45 @@ public static class FileObjectOperation <TFileSysObj>
     /// <param name="creationMethod">创建方式</param>
     /// <param name="suffix">后缀</param>
     /// <returns></returns>
-    public static TFileSysObj? Create(string fullPath, 
+    public static TFileSysObj? Create(string fullPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
         // 目标路径与唯一的新路径
         string newFullPath = fullPath;
-        string uniqueFullPath = PathStringProc.GenerateUniquePath<TFileSysObj>(newFullPath, suffix);
+        string uniqueFullPath = PathHelper.GenerateUniquePath<TFileSysObj>(newFullPath, suffix);
         
         // 创建实例并使用FillInfo模拟构造
         var newFileSysObj = new TFileSysObj();
         newFileSysObj.FillInfo(new CPath(newFullPath));
 
         // 基础情况：存在且保持，两者冲突
-        if (TFileSysObj.Exists(newFullPath) && creationMethod == CreationMethod.Keep) return null;
+        if (TFileSysObj.FileSystem.Exists(newFullPath) && creationMethod == CreationMethod.Keep) return null;
 
         try
         {
-            if (!TFileSysObj.Exists(newFullPath))
+            if (!TFileSysObj.FileSystem.Exists(newFullPath))
             {
-                TFileSysObj.Create(newFullPath);
+                TFileSysObj.FileSystem.Create(newFullPath);
                 return newFileSysObj;
             }
 
             switch (creationMethod)
             {
                 case CreationMethod.New:
-                    TFileSysObj.Create(uniqueFullPath);
+                    TFileSysObj.FileSystem.Create(uniqueFullPath);
                     newFileSysObj.FillInfo(new CPath(uniqueFullPath));
                     break;
-                case CreationMethod.Cover: // 注意：此选项将覆盖原有文件，谨慎操作
-                    TFileSysObj.Delete(newFullPath);
+                
+                // 注意：此选项将覆盖原有文件，谨慎操作
+                case CreationMethod.Cover: 
+                    TFileSysObj.FileSystem.Delete(newFullPath);
                     break;
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[ERR] Failed to create FileSysObj: {ex}");
+            throw new Exception($"Failed to create FileObject: {ex}");
         }
         return newFileSysObj;
     }
@@ -91,16 +94,17 @@ public static class FileObjectOperation <TFileSysObj>
     /// <returns></returns>
     public static bool Delete(string fullPath)
     {
-        if (!TFileSysObj.Exists(fullPath)) return false;
+        if (!TFileSysObj.FileSystem.Exists(fullPath)) return false;
         
         try
         {
-            TFileSysObj.Delete(fullPath);
+            TFileSysObj.FileSystem.Delete(fullPath);
             return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[ERR] Failed to delete FileSysObj: {ex}");
+            throw new Exception($"Failed to delete FileSysObject: {ex}");
         }
 
         return false;
@@ -130,11 +134,12 @@ public static class FileObjectOperation <TFileSysObj>
 
         try
         {
-            TFileSysObj.Move(sourceFPath, uniquePath);
+            TFileSysObj.FileSystem.Move(sourceFPath, uniquePath);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ERR] Failed to rename(in func) FileSysObj: {ex}");
+            Debug.WriteLine($"[ERR] Failed to rename FileSysObj: {ex}");
+            throw new Exception($"Failed to rename FileObject: {ex}");
         }
 
         return creation;
