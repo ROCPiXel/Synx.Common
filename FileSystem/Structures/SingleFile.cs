@@ -12,13 +12,12 @@ public class SingleFile : IFileObject<SingleFile>
     // 对象类型
     public static FileObjectType ObjectType { get; } = FileObjectType.File;
     public static IFileSystem FileSystem { get; } = SingleFileSystem.Instance;
-    
+
     // 基本信息
     public string Name { get; set; } = string.Empty; // 名称
     public string RealName { get; set; } = string.Empty; // 除去后缀的名字
     public string Extension { get; set; } = string.Empty; // 扩展名
     public CPath Path { get; set; } // 路径+文件名，完整路径
-    public CPath ParentPath { get; set; } // 所在文件夹路径
     public bool IsExists { get; set; } // 是否存在
 
     // 以下为可空属性，当实例不存在为空
@@ -43,8 +42,8 @@ public class SingleFile : IFileObject<SingleFile>
         Extension = string.Empty;
         RealName = string.Empty;
         Path = new();
-        ParentPath = new();
     }
+
     /// <summary>
     /// 路径为字符串的构造函数
     /// </summary>
@@ -72,14 +71,16 @@ public class SingleFile : IFileObject<SingleFile>
         Name = name;
         Extension = PathHelper.GetExtension(Name);
         RealName = PathHelper.GetRealName(Name);
-        ParentPath = new CPath(parentPath);
-        Path = new CPath(parentPath + name);
+        // Path = new CPath(parentPath + name);
+        Path = new CPath([parentPath, name]);
         IsExists = File.Exists(Path.AbsolutePath);
     }
+
     public void FillInfo(string name, CPath cPath)
     {
         FillInfo(name, cPath.AbsolutePath);
     }
+
     public void FillInfo(CPath fullCPath)
     {
         FillInfo(fullCPath.Name, fullCPath.ParentPath);
@@ -91,7 +92,7 @@ public class SingleFile : IFileObject<SingleFile>
     /// <returns></returns>
     public SingleFile GetInfo()
     {
-        FillInfo(Name, Path.AbsolutePath);
+        FillInfo(Name, Path.ParentPath);
         return FileAttribute.GetFileInfo(this);
     }
 
@@ -123,12 +124,12 @@ public class SingleFile : IFileObject<SingleFile>
     /// <summary>
     /// 使用实例信息创建文件
     /// </summary>
-    /// <param name="creationMethod"></param>
+    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
-    public void Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    public SingleFile? Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
-        FileObjectOperation<SingleFile>.Create(this, creationMethod, suffix);
+        return FileObjectOperation<SingleFile>.Create(this, creationMethod, suffix);
     }
 
     /// <summary>
@@ -143,15 +144,21 @@ public class SingleFile : IFileObject<SingleFile>
     /// <summary>
     /// 重命名文件，本实例数据将自动更新
     /// </summary>
-    /// <param name="newName"></param>
+    /// <param name="newFullPath"></param>
     /// <param name="creationMethod"></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
-    public SingleFile? Rename(string newName, 
-        CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    public SingleFile? Rename(string newFullPath,
+        CreationMethod creationMethod = CreationMethod.Keep,
+        string suffix = Definition.DefaultSuffix)
     {
-        var newFile = FileObjectOperation<SingleFile>.Rename(this, new SingleFile(newName, Path.AbsolutePath),
-            creationMethod, suffix);
+        var newFile = FileObjectOperation<SingleFile>.Rename(this,
+            newFullPath,
+            creationMethod,
+            suffix);
+        GetInfo();
         return newFile;
     }
+
+    public override string ToString() => Path.ToString();
 }

@@ -11,16 +11,16 @@ public interface IFileSystem
     /// <summary>代表文件系统的流</summary>
     public FileStream? Open(string fullPath,
                             FileMode mode,
-                            FileAccess? access,
-                            FileShare? share, 
-                            int? bufferSize,
-                            FileOptions? options);
+                            FileAccess? access = FileAccess.ReadWrite,
+                            FileShare? share = FileShare.None, 
+                            int? bufferSize = 4096,
+                            FileOptions? options = FileOptions.None);
 
     /// <summary>判断存在</summary>
     public bool Exists(string fullPath);
     
     /// <summary>创建</summary>
-    public void Create(string fullPath);
+    public FileStream Create(string fullPath);
     
     /// <summary>删除</summary>
     public void Delete(string fullPath);

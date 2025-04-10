@@ -2,11 +2,23 @@
 using Synx.Common.Base;
 using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
+using Synx.Common.FileSystem.Operations;
 
 namespace Synx.Common.Utils;
 
 public static class PathHelper
 {
+    /// <summary>
+    /// Combine: Func
+    /// （根据顺序）拼接路径
+    /// </summary>
+    /// <param name="paths"></param>
+    /// <returns></returns>
+    public static string Combine(params string[] paths)
+    {
+        return Path.Combine(paths);
+    }
+    
     /// <summary>
     /// GetExtension: Func
     /// 如果有，获取扩展名
@@ -33,9 +45,10 @@ public static class PathHelper
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
+    // TODO：逻辑问题
     public static string GetRealName(string name)
     {
-        string[] part = name.Split(".");
+        string[] part = name.Split("\\")[^1].Split(".");
         string realName = string.Empty;
         for (int i = 0; i < part.Length - 1; i++)
         {
@@ -75,16 +88,18 @@ public static class PathHelper
         where TFileSysObj : IFileObject<TFileSysObj>
     {
         string extension = string.Empty;
+        string baseName = GetRealName(basePath);
+        string parentPath = PathOperation.GetParentPath(basePath);
         if (TFileSysObj.ObjectType == FileObjectType.File)
         {
             extension = GetExtension(basePath);
         }
 
-        string candidate = $"{basePath}{suffix}{extension}";
+        string candidate = $"{parentPath}{baseName}{suffix}{extension}";
         int counter = 1;
         while (File.Exists(candidate))
         {
-            candidate = $"{basePath}{suffix}_{counter++}{extension}";
+            candidate = Combine(parentPath, $"{baseName}{suffix}_{counter++}{extension}");
         }
 
         return candidate;

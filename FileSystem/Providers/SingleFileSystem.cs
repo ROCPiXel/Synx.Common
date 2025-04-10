@@ -21,7 +21,7 @@ public class SingleFileSystem : FileSystemBase<SingleFileSystem>
 
     public override bool Exists(string fullPath) => File.Exists(fullPath);
     
-    public override void Create(string fullPath) => File.Create(fullPath);
+    public override FileStream Create(string fullPath) => File.Create(fullPath);
     
     public override void Delete(string fullPath) => File.Delete(fullPath);
     

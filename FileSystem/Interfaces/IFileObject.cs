@@ -26,7 +26,6 @@ public interface IFileObject<TFileObject>
     string Name { get; set; }
     string Extension { get; }
     CPath Path { get; set; }
-    CPath ParentPath { get; set; }
     bool IsExists { get; set; }
     
     /// <summary>

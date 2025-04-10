@@ -13,7 +13,7 @@ public static class FileAttribute
     /// <exception cref="FileNotFoundException"></exception>
     public static SingleFile GetFileInfo(SingleFile singleFile)
     {
-        if (!singleFile.IsExists)
+        if (!File.Exists(singleFile.Path.AbsolutePath))
         {
             throw new FileNotFoundException();
         }

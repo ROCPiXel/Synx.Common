@@ -1,4 +1,5 @@
 ﻿using Synx.Common.FileSystem.Structures;
+using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Operations;
 
@@ -14,7 +15,7 @@ public static class PathOperation
     public static string GetAbsolutePath(string path, string? basePath = null)
     {
         if (string.IsNullOrEmpty(path)) return string.Empty;
-        basePath = basePath ?? AppDomain.CurrentDomain.BaseDirectory;
+        basePath ??= AppDomain.CurrentDomain.BaseDirectory;
         return Path.GetFullPath(path, basePath);
     }
 
@@ -89,10 +90,8 @@ public static class PathOperation
         string parentPath = string.Empty;
         for (int i = 0; i < part.Length - 1; i++)
         {
-            parentPath += part[i];
-            parentPath += "\\";
+            parentPath = PathHelper.Combine(parentPath, part[i]);
         }
-        parentPath = parentPath.Substring(0, parentPath.Length - 1);
         return parentPath;
     }
 

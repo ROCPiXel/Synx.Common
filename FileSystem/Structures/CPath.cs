@@ -1,4 +1,5 @@
 ﻿using Synx.Common.FileSystem.Operations;
+using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -11,6 +12,7 @@ public struct CPath
     // 绝对路径与相对路径
     public string AbsolutePath { get; set; }
     public string RelativePath { get; set; }
+    public string Base { get; set; }
     public string Name { get; set; }
     public string ParentPath { get; set; }
     public Uri? Uri { get; set; }
@@ -19,9 +21,12 @@ public struct CPath
     {
         AbsolutePath = PathOperation.GetAbsolutePath(path, basePath);
         RelativePath = PathOperation.GetAbsolutePath(path, basePath);
-        Name = PathOperation.GetNameFromPath(path);
-        ParentPath = PathOperation.GetParentPath(path);
+        Name ??= PathOperation.GetNameFromPath(path);
+        ParentPath ??= PathOperation.GetParentPath(path);
     }
+
+    public CPath(params string[] paths):
+        this(PathHelper.Combine(paths)) {}
 
     public CPath()
     {

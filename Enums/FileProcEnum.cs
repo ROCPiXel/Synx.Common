@@ -44,7 +44,7 @@ public enum FileFormat
     psd,
     psb,
     Null,
-    Unknow
+    Unknown
 }
 
 public enum FileObjectType

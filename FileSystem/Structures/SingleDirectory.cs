@@ -16,7 +16,6 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     // 基本信息
     public string Name { get; set; } = string.Empty;
     public string Extension { get; } = string.Empty;
-    public CPath ParentPath { get; set; } // 所在文件夹路径
     public CPath Path { get; set; } // 路径+文件名，完整路径
     public DirectoryInfo? DirectoryInfo { get; set; } // 本文件夹的信息
     public bool IsExists { get; set; } = false;
@@ -61,7 +60,6 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     public void FillInfo(string name, string parentPath)
     {
         Name = name;
-        ParentPath = new(parentPath);
         Path = new($"{parentPath}\\{name}");
     }
 
@@ -90,8 +88,8 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <returns></returns>
     public SingleDirectory GetDepth()
     {
-        DirectoryAttribute.GetDirectoryInfo(this);
-        Depth = DirectoryAttribute.GetDepth(DirectoryInfo);
+        if (DirectoryInfo is null) DirectoryAttribute.GetDirectoryInfo(this);
+        Depth = DirectoryAttribute.GetDepth(DirectoryInfo!);
         return this;
     }
         
@@ -110,14 +108,44 @@ public class SingleDirectory : IFileObject<SingleDirectory>
 
     public SingleDirectory Refresh()
     {
-        FillInfo(Name, ParentPath);
+        FillInfo(Name, Path.ParentPath);
         GetInfo();
         return this;
     }
     
-    // 方法
-    public override string ToString()
+    // 以下：目录操作
+    /// <summary>
+    /// 创建本实例
+    /// </summary>
+    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="suffix"></param>
+    public void Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
-        return Path.ToString();
+        FileObjectOperation<SingleDirectory>.Create(this, creationMethod, suffix);
     }
+    
+    /// <summary>
+    /// 删除本实例
+    /// </summary>
+    /// <returns>是否删除成功</returns>
+    public bool Delete() => FileObjectOperation<SingleDirectory>.Delete(this);
+    
+    /// <summary>
+    /// 重命名本实例
+    /// </summary>
+    /// <param name="newFullPath">新的全路径</param>
+    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="suffix">后缀</param>
+    /// <returns>重命名后的新对象</returns>
+    public SingleDirectory? Rename(string newFullPath,
+        CreationMethod creationMethod = CreationMethod.Keep,
+        string suffix = Definition.DefaultSuffix)
+    {
+        var newDirectory = FileObjectOperation<SingleDirectory>.Rename(this, newFullPath, creationMethod, suffix); 
+        GetInfo();
+        return newDirectory;
+    }
+
+    // 方法
+    public override string ToString() => Path.ToString();
 }

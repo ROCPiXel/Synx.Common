@@ -136,16 +136,3 @@ public static class RTE
         return WorkspacePath;
     }
 }
-
-/// <summary>
-/// SystemStatus - Class
-/// 用于高频获取硬件使用信息
-/// </summary>
-public class SystemStatus
-{
-    public double CPUUsage { get; set; }
-    public double GPUUsage { get; set; }
-    public double RAMUsage { get; set; }
-
-    public SystemStatus() { }
-}

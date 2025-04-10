@@ -41,7 +41,7 @@ public abstract class FileSystemBase<TFileSystem> : IFileSystem
 
     public abstract bool Exists(string fullPath);
     
-    public abstract void Create(string fullPath);
+    public abstract FileStream Create(string fullPath);
     
     public abstract void Delete(string fullPath);
     

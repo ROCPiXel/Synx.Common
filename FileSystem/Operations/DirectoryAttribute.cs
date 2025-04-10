@@ -72,13 +72,14 @@ public static class DirectoryAttribute
     /// <returns></returns>
     public static SingleDirectory GetContent(SingleDirectory sd)
     {
+        if (sd.DirectoryInfo is null) GetDirectoryInfo(sd);
         try
         {
             if (sd.DirectoryInfo == null)
             {
                 GetDirectoryInfo(sd); // 当递归传入空目录，引发异常返回
             }
-            DirectoryInfo[] directoriesInfo = sd.DirectoryInfo.GetDirectories();
+            DirectoryInfo[] directoriesInfo = sd.DirectoryInfo!.GetDirectories();
             //sd.ChildDirectoriesInfo = directoriesInfo;
             foreach (DirectoryInfo di in directoriesInfo)
             {
@@ -100,11 +101,11 @@ public static class DirectoryAttribute
     /// <returns></returns>
     public static SingleDirectory Traverse(SingleDirectory sd)
     {
-        GetDirectoryInfo(sd); // 预处理，并添加目录信息
+        if (sd.DirectoryInfo is null) GetDirectoryInfo(sd); // 预处理，并添加目录信息
         try
         {
             // 遍历每个子目录
-            foreach (DirectoryInfo di in sd.DirectoryInfo.GetDirectories())
+            foreach (DirectoryInfo di in sd.DirectoryInfo!.GetDirectories())
             {
                 SingleDirectory dir = new(di);
                 sd.SubDirectory.Add(Traverse(dir)); // 递归

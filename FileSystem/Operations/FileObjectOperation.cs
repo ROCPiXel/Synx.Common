@@ -21,12 +21,13 @@ public static class FileObjectOperation <TFileSysObj>
     /// 创建文件对象，重载时文件夹名加上前缀"\\"
     /// </summary>
     /// <param name="fullPath">完整路径</param>
-    /// <param name="creationMethod">创建方式</param>
+    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
     /// <param name="suffix">后缀</param>
     /// <returns></returns>
     public static TFileSysObj? Create(string fullPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
+        ArgumentNullException.ThrowIfNull(fullPath);
         // 目标路径与唯一的新路径
         string newFullPath = fullPath;
         string uniqueFullPath = PathHelper.GenerateUniquePath<TFileSysObj>(newFullPath, suffix);
@@ -42,19 +43,19 @@ public static class FileObjectOperation <TFileSysObj>
         {
             if (!TFileSysObj.FileSystem.Exists(newFullPath))
             {
-                TFileSysObj.FileSystem.Create(newFullPath);
+                TFileSysObj.FileSystem.Create(newFullPath).Close();
                 return newFileSysObj;
             }
 
             switch (creationMethod)
             {
                 case CreationMethod.New:
-                    TFileSysObj.FileSystem.Create(uniqueFullPath);
+                    TFileSysObj.FileSystem.Create(uniqueFullPath).Close();
                     newFileSysObj.FillInfo(new CPath(uniqueFullPath));
                     break;
-                
+
                 // 注意：此选项将覆盖原有文件，谨慎操作
-                case CreationMethod.Cover: 
+                case CreationMethod.Cover:
                     TFileSysObj.FileSystem.Delete(newFullPath);
                     break;
             }
@@ -73,11 +74,11 @@ public static class FileObjectOperation <TFileSysObj>
     
     public static TFileSysObj? Create(string name, string parentPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
-        => Create(parentPath + name, creationMethod, suffix);
+        => Create(PathHelper.Combine([parentPath, name]), creationMethod, suffix);
     
     public static TFileSysObj? Create(string name, CPath parentCPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix) 
-        => Create(parentCPath.AbsolutePath + name, creationMethod, suffix);
+        => Create(PathHelper.Combine([parentCPath.AbsolutePath, name]), creationMethod, suffix);
 
     public static TFileSysObj? Create(TFileSysObj fileSysObj,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
@@ -104,7 +105,7 @@ public static class FileObjectOperation <TFileSysObj>
         catch (Exception ex)
         {
             Debug.WriteLine($"[ERR] Failed to delete FileSysObj: {ex}");
-            throw new Exception($"Failed to delete FileSysObject: {ex}");
+            // throw new Exception($"Failed to delete FileSysObject: {ex}");
         }
 
         return false;
@@ -120,11 +121,11 @@ public static class FileObjectOperation <TFileSysObj>
     /// Rename: tFunc
     /// 重命名文件实例
     /// </summary>
-    /// <param name="sourceFPath"></param>
-    /// <param name="targetFPath"></param>
-    /// <param name="creationMethod"></param>
+    /// <param name="sourceFPath">源路径</param>
+    /// <param name="targetFPath">完整的目标路径</param>
+    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
     /// <param name="suffix"></param>
-    /// <returns></returns>
+    /// <returns>重命名之后的新实例，null为失败</returns>
     public static TFileSysObj? Rename(string sourceFPath, string targetFPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
@@ -153,10 +154,19 @@ public static class FileObjectOperation <TFileSysObj>
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
         => Rename(parentPath + sourceName, parentPath + targetName, creationMethod, suffix);
 
-    public static TFileSysObj? Rename(TFileSysObj source, TFileSysObj target,
+    /// <summary>注意：此Rename重载不返回Null，若重命名失败会返回传入对象</summary>
+    public static TFileSysObj Rename(TFileSysObj source, TFileSysObj target,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
-        target = Create(source.Path.AbsolutePath, target.Path.AbsolutePath, creationMethod, suffix) ?? target;
+        target = Rename(source.Path.AbsolutePath, target.Path.AbsolutePath, creationMethod, suffix) ?? target;
         return target;
+    }
+    
+    /// <summary>注意：此Rename重载不返回Null，若重命名失败会返回传入对象</summary>
+    public static TFileSysObj Rename(TFileSysObj source, string targetFullPath, 
+        CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    {
+        source = Rename(source.Path.AbsolutePath, targetFullPath, creationMethod, suffix) ?? source;
+        return source;
     }
 }
