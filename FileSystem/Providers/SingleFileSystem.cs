@@ -1,4 +1,4 @@
-﻿using Synx.Common.Utils;
+﻿using Synx.Common.FileSystem.Operations;
 
 namespace Synx.Common.FileSystem.Providers;
 
@@ -21,11 +21,14 @@ public class SingleFileSystem : FileSystemBase<SingleFileSystem>
 
     public override bool Exists(string fullPath) => File.Exists(fullPath);
     
-    public override FileStream Create(string fullPath) => File.Create(fullPath);
+    public override FileStream Create(string fullPath) 
+        => File.Create(fullPath);
     
-    public override void Delete(string fullPath) => File.Delete(fullPath);
+    public override void Delete(string fullPath) 
+        => File.Delete(fullPath);
     
-    public override void Move(string sourceFPath, string targetFPath) =>  File.Move(sourceFPath, targetFPath);
-    
-    public override string GenerateUniquePath(string fullPath, string suffix) => PathHelper.GenerateFilePath(fullPath, suffix);
+    public override void Move(string sourceFPath, string targetFPath) 
+        =>  File.Move(sourceFPath, targetFPath);
+    public override string GetExtension(string fullPath, bool includeDot = true)
+        => PathOperation.GetExtension(fullPath, includeDot);
 }

@@ -1,5 +1,4 @@
 ﻿using Synx.Common.Enums;
-using Synx.Common.FileSystem.Providers;
 using Synx.Common.FileSystem.Structures;
 
 namespace Synx.Common.FileSystem.Interfaces;

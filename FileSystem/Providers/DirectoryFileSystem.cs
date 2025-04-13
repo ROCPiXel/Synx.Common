@@ -1,7 +1,4 @@
-﻿using Synx.Common.FileSystem.Interfaces;
-using Synx.Common.Utils;
-
-namespace Synx.Common.FileSystem.Providers;
+﻿namespace Synx.Common.FileSystem.Providers;
 
 public class DirectoryFileSystem : FileSystemBase<DirectoryFileSystem>
 {
@@ -30,7 +27,7 @@ public class DirectoryFileSystem : FileSystemBase<DirectoryFileSystem>
     
     public override void Move(string sourceFPath, string targetFPath) 
         => Directory.Move(sourceFPath, targetFPath);
-    
-    public override string GenerateUniquePath(string fullPath, string suffix) 
-        => PathHelper.GenerateDirectoryPath(fullPath, suffix);
+
+    public override string GetExtension(string fullPath, bool includeDot = true)
+        => string.Empty;
 }

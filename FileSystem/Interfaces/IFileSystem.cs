@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Synx.Common.FileSystem.Interfaces;
+﻿namespace Synx.Common.FileSystem.Interfaces;
 
 /// <summary>
 /// IFileSystem: Interface
@@ -27,7 +25,7 @@ public interface IFileSystem
     
     /// <summary>移动到（原生操作而并非重命名）</summary>
     public void Move(string sourceFPath, string targetFPath);
-    
-    /// <summary>生成唯一的新路径</summary>
-    public string GenerateUniquePath(string fullPath, string suffix);
+
+    /// <summary>获取路径的后缀名，文件与目录路径上的唯一（？）区别</summary>
+    public string GetExtension(string fullPath, bool includeDot = true);
 }

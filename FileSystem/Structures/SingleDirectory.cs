@@ -1,9 +1,7 @@
-﻿using Synx.Common.Base;
-using Synx.Common.Enums;
+﻿using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
 using Synx.Common.FileSystem.Providers;
-using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -117,7 +115,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <summary>
     /// 创建本实例
     /// </summary>
-    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
     /// <param name="suffix"></param>
     public void Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
@@ -134,7 +132,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// 重命名本实例
     /// </summary>
     /// <param name="newFullPath">新的全路径</param>
-    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
     /// <param name="suffix">后缀</param>
     /// <returns>重命名后的新对象</returns>
     public SingleDirectory? Rename(string newFullPath,

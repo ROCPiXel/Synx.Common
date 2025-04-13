@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Synx.Common.FileSystem.Interfaces;
-using Synx.Common.Utils;
+﻿using Synx.Common.FileSystem.Interfaces;
 
 namespace Synx.Common.FileSystem.Providers;
 
@@ -47,5 +45,5 @@ public abstract class FileSystemBase<TFileSystem> : IFileSystem
     
     public abstract void Move(string sourceFPath, string targetFPath);
     
-    public abstract string GenerateUniquePath(string fullPath, string suffix);
+    public abstract string GetExtension(string fullPath, bool includeDot = true);
 }

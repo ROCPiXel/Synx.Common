@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Synx.Common;
+﻿namespace Synx.Common;
 
 /// <summary>
 /// Definition: Class
@@ -58,7 +52,7 @@ public static class Definition
     public const int DaysPerMonth = 30;
     public const int MonthsPerYear = 12;
     public const int DaysPerYear = 365;
-    public const int DaysPerLeapYear = 366;
+    public const int DaysPerLeapYear = 366; // 闰年366天
 
     /// <summary>
     /// 格林威治时间1970年01月01日00时00分00秒
@@ -75,5 +69,5 @@ public static class Definition
     /// <summary>
     /// 最大扫描深度
     /// </summary>
-    public const int DirectoryScanningMaxDepth = 1000;
+    public const int DirectoryScanningMaxDepth = 1024;
 }

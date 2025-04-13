@@ -1,9 +1,7 @@
-﻿using Synx.Common.Base;
-using Synx.Common.Enums;
+﻿using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
 using Synx.Common.FileSystem.Providers;
-using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -69,8 +67,8 @@ public class SingleFile : IFileObject<SingleFile>
     public void FillInfo(string name, string parentPath)
     {
         Name = name;
-        Extension = PathHelper.GetExtension(Name);
-        RealName = PathHelper.GetRealName(Name);
+        Extension = PathOperation.GetExtension(Name);
+        RealName = PathOperation.GetRealName(Name);
         // Path = new CPath(parentPath + name);
         Path = new CPath([parentPath, name]);
         IsExists = File.Exists(Path.AbsolutePath);
@@ -124,7 +122,7 @@ public class SingleFile : IFileObject<SingleFile>
     /// <summary>
     /// 使用实例信息创建文件
     /// </summary>
-    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
     public SingleFile? Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)

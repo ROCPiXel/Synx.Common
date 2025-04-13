@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
-using Synx.Common.Base;
 using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Structures;
-using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Operations;
 
@@ -13,7 +11,7 @@ namespace Synx.Common.FileSystem.Operations;
 /// 合并: DirectoryOperation, FileOperation
 /// </summary>
 /// <typeparam name="TFileSysObj">文件系统中的对象，此处要求SingleDirectory/File</typeparam>
-public static class FileObjectOperation <TFileSysObj> 
+public static class FileObjectOperation<TFileSysObj> 
     where TFileSysObj: class, IFileObject<TFileSysObj>, new()
 {
     /// <summary>
@@ -21,7 +19,7 @@ public static class FileObjectOperation <TFileSysObj>
     /// 创建文件对象，重载时文件夹名加上前缀"\\"
     /// </summary>
     /// <param name="fullPath">完整路径</param>
-    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
     /// <param name="suffix">后缀</param>
     /// <returns></returns>
     public static TFileSysObj? Create(string fullPath,
@@ -30,7 +28,7 @@ public static class FileObjectOperation <TFileSysObj>
         ArgumentNullException.ThrowIfNull(fullPath);
         // 目标路径与唯一的新路径
         string newFullPath = fullPath;
-        string uniqueFullPath = PathHelper.GenerateUniquePath<TFileSysObj>(newFullPath, suffix);
+        string uniqueFullPath = PathOperation.GenerateUniquePath<TFileSysObj>(newFullPath, suffix);
         
         // 创建实例并使用FillInfo模拟构造
         var newFileSysObj = new TFileSysObj();
@@ -74,11 +72,11 @@ public static class FileObjectOperation <TFileSysObj>
     
     public static TFileSysObj? Create(string name, string parentPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
-        => Create(PathHelper.Combine([parentPath, name]), creationMethod, suffix);
+        => Create(PathOperation.Combine([parentPath, name]), creationMethod, suffix);
     
     public static TFileSysObj? Create(string name, CPath parentCPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix) 
-        => Create(PathHelper.Combine([parentCPath.AbsolutePath, name]), creationMethod, suffix);
+        => Create(PathOperation.Combine([parentCPath.AbsolutePath, name]), creationMethod, suffix);
 
     public static TFileSysObj? Create(TFileSysObj fileSysObj,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
@@ -123,7 +121,7 @@ public static class FileObjectOperation <TFileSysObj>
     /// </summary>
     /// <param name="sourceFPath">源路径</param>
     /// <param name="targetFPath">完整的目标路径</param>
-    /// <param name="creationMethod">创建方式<see cref="Synx.Common.Enums.CreationMethod"/></param>
+    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
     /// <param name="suffix"></param>
     /// <returns>重命名之后的新实例，null为失败</returns>
     public static TFileSysObj? Rename(string sourceFPath, string targetFPath,

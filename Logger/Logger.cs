@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Synx.Common.FileSystem.Structures;
+﻿using Synx.Common.FileSystem.Structures;
 
 namespace Synx.Common.Logger;
 

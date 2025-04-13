@@ -1,7 +1,4 @@
-﻿using Synx.Common.Base;
-using Synx.Common.Enums;
-
-namespace Synx.Common.FileSystem.Structures;
+﻿namespace Synx.Common.FileSystem.Structures;
 
 public struct SingleDrive
 {

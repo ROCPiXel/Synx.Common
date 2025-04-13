@@ -1,5 +1,4 @@
 ﻿using Synx.Common.FileSystem.Operations;
-using Synx.Common.Utils;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -26,7 +25,7 @@ public struct CPath
     }
 
     public CPath(params string[] paths):
-        this(PathHelper.Combine(paths)) {}
+        this(PathOperation.Combine(paths)) {}
 
     public CPath()
     {
