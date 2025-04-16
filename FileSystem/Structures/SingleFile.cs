@@ -67,8 +67,8 @@ public class SingleFile : IFileObject<SingleFile>
     public void FillInfo(string name, string parentPath)
     {
         Name = name;
-        Extension = PathOperation.GetExtension(Name);
-        RealName = PathOperation.GetRealName(Name);
+        Extension = System.IO.Path.GetExtension(Name);
+        RealName = System.IO.Path.GetFileNameWithoutExtension(Name);
         // Path = new CPath(parentPath + name);
         Path = new CPath([parentPath, name]);
         IsExists = File.Exists(Path.AbsolutePath);

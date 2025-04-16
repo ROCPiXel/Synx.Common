@@ -30,5 +30,5 @@ public class SingleFileSystem : FileSystemBase<SingleFileSystem>
     public override void Move(string sourceFPath, string targetFPath) 
         =>  File.Move(sourceFPath, targetFPath);
     public override string GetExtension(string fullPath, bool includeDot = true)
-        => PathOperation.GetExtension(fullPath, includeDot);
+        => Path.GetExtension(fullPath);
 }

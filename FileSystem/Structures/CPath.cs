@@ -27,7 +27,7 @@ public struct CPath //TODO：总觉得哪里不对
         {
             if (_absolutePath != null) return _absolutePath;
             ArgumentException.ThrowIfNullOrEmpty(_relativePath, nameof(_relativePath));
-            return _absolutePath = PathOperation.GetAbsolutePath(_relativePath, _base);
+            return _absolutePath = Path.GetFullPath(_relativePath, _base ?? AppDomain.CurrentDomain.BaseDirectory);
         }
         set => _absolutePath = value;
     }
@@ -44,7 +44,7 @@ public struct CPath //TODO：总觉得哪里不对
             if (_relativePath != null) return _relativePath;
             ArgumentException.ThrowIfNullOrEmpty(_absolutePath, nameof(_absolutePath));
             _base ??= AppDomain.CurrentDomain.BaseDirectory;
-            return _relativePath = PathOperation.GetRelativePath(_absolutePath, _base);
+            return _relativePath = Path.GetRelativePath(_base, _absolutePath);
         }
         set => _relativePath = value;
     }
@@ -60,7 +60,7 @@ public struct CPath //TODO：总觉得哪里不对
         {
             if (_base != null) return _base;
             if(_relativePath == null || _absolutePath == null) return AppDomain.CurrentDomain.BaseDirectory;
-            return _base = PathOperation.GetAbsolutePath(_relativePath, _base);
+            return _base = Path.GetFullPath(_relativePath, AppDomain.CurrentDomain.BaseDirectory);
         }
         set => _base = value;
     }
@@ -123,8 +123,8 @@ public struct CPath //TODO：总觉得哪里不对
     /// <param name="basePath"></param>
     public CPath(string absolutePath, string? basePath = null)
     {
-        AbsolutePath = PathOperation.GetAbsolutePath(absolutePath, basePath);
         Base = basePath ?? AppDomain.CurrentDomain.BaseDirectory;
+        AbsolutePath = Path.GetFullPath(absolutePath, Base);
     }
 
     /// <summary>
@@ -151,9 +151,9 @@ public struct CPath //TODO：总觉得哪里不对
         
         // 更新所有字段
         _absolutePath = primaryPath;
-        _relativePath = PathOperation.GetRelativePath(primaryPath, _base);
-        _uri = new Uri(primaryPath);
         _base = Base; // Base.getter 反推base或者返回工作目录
+        _relativePath = Path.GetRelativePath(_base, primaryPath);
+        _uri = new Uri(primaryPath);
         _parentPath = PathOperation.GetParentPath(primaryPath);
         _name = PathOperation.GetNameFromPath(_absolutePath);
         return this;
