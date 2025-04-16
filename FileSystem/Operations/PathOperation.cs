@@ -6,7 +6,10 @@ using System.Text.RegularExpressions;
 
 namespace Synx.Common.FileSystem.Operations;
 
-
+/// <summary>
+/// 路径的一些常规操作
+/// 与<see cref="System.IO.Path">System.IO.Path</see>高度重合的方法将不再实现
+/// </summary>
 /// <see cref="http://learn.microsoft.com/zh-cn/dotnet/fundamentals/code-analysis/quality-rules/ca1847">CA1847</see>
 public static class PathOperation
 {
@@ -157,7 +160,6 @@ public static class PathOperation
     /// <param name="name"></param>
     /// <returns></returns>
     // TODO：逻辑问题
-    // TODO: 支持无扩展名的文件
     public static string GetRealName(string name)
     {
         string[] part = name.Split('\\')[^1].Split('.');
@@ -167,7 +169,7 @@ public static class PathOperation
     }
     
     /// <summary>
-    /// 
+    /// 根据提供的文件系统生成唯一的路径以避免重复
     /// </summary>
     /// <param name="basePath"></param>
     /// <param name="suffix"></param>
