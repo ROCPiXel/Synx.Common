@@ -68,8 +68,8 @@ public struct SingleDrive
         Properties = new()
         {
             ["Name"] = Name,
-            ["UNCPath"] = Path.RelativePath,
-            ["Path"] = Path.AbsolutePath,
+            ["UNCPath"] = Path.GetRelativePath(),
+            ["Path"] = Path.GetAbsolutePath(),
             ["DriveLetter"] = DriveLetter,
             ["FileSystem"] = FileSystem.ToString(),
             ["DriveType"] = DriveType.ToString(),

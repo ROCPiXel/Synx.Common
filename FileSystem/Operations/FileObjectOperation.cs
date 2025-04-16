@@ -72,11 +72,11 @@ public static class FileObjectOperation<TFileSysObj>
     
     public static TFileSysObj? Create(string name, string parentPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
-        => Create(Path.Combine([parentPath, name]), creationMethod, suffix);
+        => Create(PathOperation.Combine([parentPath, name]), creationMethod, suffix);
     
     public static TFileSysObj? Create(string name, CPath parentCPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix) 
-        => Create(Path.Combine([parentCPath.AbsolutePath, name]), creationMethod, suffix);
+        => Create(PathOperation.Combine([parentCPath.AbsolutePath, name]), creationMethod, suffix);
 
     public static TFileSysObj? Create(TFileSysObj fileSysObj,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)

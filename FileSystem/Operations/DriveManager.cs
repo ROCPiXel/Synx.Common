@@ -4,45 +4,16 @@ using Synx.Common.Utils;
 namespace Synx.Common.FileSystem.Operations;
 
 // TODO: DriveManager
-public class DriveManager
+public static class DriveManager
 {
-    private volatile DriveManager? _instance = null;
-    private object _instanceLock = new object();
-    /// <summary>
-    /// DriveManager Singleton模式实现
-    /// </summary>
-    public DriveManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                lock (_instanceLock)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new DriveManager();
-                    }
-                }
-            }
-            return _instance;
-        }
-    }
-
-    public List<SingleDrive> DiskList { get; set; } = new(); // 将包含网络磁盘驱动器，目前暂不支持
+    public static List<SingleDrive> DiskList { get; set; } = new(); // 将包含网络磁盘驱动器，目前暂不支持
     public static int NumOfDisks { get; set; } = 0;
-    public DriveInfo[] AllDrives = DriveInfo.GetDrives();
-
-    public async Task RefreshAsync()
-    {
-        AllDrives = await Task.Run(() => DriveInfo.GetDrives());
-        GetLocalDiskList();
-    }
+    public static readonly DriveInfo[] AllDrives = DriveInfo.GetDrives();
 
     /// <summary>
     /// 获取本地磁盘属性列表
     /// </summary>
-    public void GetLocalDiskList()
+    public static void GetLocalDiskList()
     {
         for (int i = 0; i < AllDrives.Length; i++)
         {

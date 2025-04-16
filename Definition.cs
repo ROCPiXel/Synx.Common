@@ -7,6 +7,7 @@
 public static class Definition
 {
     // 一些常用存储容量关于Byte关系的常量，KiB = 1024 Bytes, KB = 1000 Bytes
+
     public const int Byte = 1;
 
     public const long KiB = 1024 * Byte;
@@ -69,17 +70,4 @@ public static class Definition
     /// 最大扫描深度
     /// </summary>
     public const int DirectoryScanningMaxDepth = 1024;
-    public const int FileNameMaxLength = int.MaxValue;
-    
-#if WINDOWS
-    public const char LocalDirectorySeparatorChar = '\\';
-    public const char AltDirectorySeparatorChar = '/';
-#elif MACOS || LINUX || IOS || BROWSER
-    public const char LocalDirectorySeparatorChar = '/';
-    public const char AltDirectorySeparatorChar = '/';
-#else
-    public const char LocalDirectorySeparatorChar = '\\';
-    public const char AltDirectorySeparatorChar = '/';
-#endif
-    
 }
