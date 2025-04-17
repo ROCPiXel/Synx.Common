@@ -1,4 +1,5 @@
-﻿using Synx.Common.Enums;
+﻿using System.Collections;
+using Synx.Common.Enums;
 using Synx.Common.FileSystem.Operations;
 
 namespace Synx.Common.FileSystem.Structures;
@@ -7,7 +8,8 @@ namespace Synx.Common.FileSystem.Structures;
 /// CPath - CompositePath: struct
 /// 复合路径，含有绝对与相对路径
 /// </summary>
-public struct CPath //TODO：总觉得哪里不对
+///  TODO: IEnumerable，实现foreach
+public struct CPath : IEnumerable<CPath>
 {
     private string? _absolutePath;
     private string? _relativePath;
@@ -43,7 +45,7 @@ public struct CPath //TODO：总觉得哪里不对
         {
             if (_relativePath != null) return _relativePath;
             ArgumentException.ThrowIfNullOrEmpty(_absolutePath, nameof(_absolutePath));
-            _base ??= AppDomain.CurrentDomain.BaseDirectory;
+            _base ??= Path.GetPathRoot(_absolutePath) ?? AppDomain.CurrentDomain.BaseDirectory;
             return _relativePath = PathOperation.GetRelativePath(_absolutePath, _base);
         }
         set => _relativePath = value;
@@ -59,8 +61,10 @@ public struct CPath //TODO：总觉得哪里不对
         get
         {
             if (_base != null) return _base;
-            if(_relativePath == null || _absolutePath == null) return AppDomain.CurrentDomain.BaseDirectory;
-            return _base = PathOperation.GetAbsolutePath(_relativePath, _base);
+            if(_relativePath == null || _absolutePath == null) 
+                return _base = PathOperation.GetPathRoot(_absolutePath ?? _relativePath ?? null)
+                    ?? AppDomain.CurrentDomain.BaseDirectory;
+            return _base = PathOperation.GetAbsolutePath(_relativePath, _absolutePath);
         }
         set => _base = value;
     }
@@ -68,7 +72,7 @@ public struct CPath //TODO：总觉得哪里不对
     /// <summary>
     /// <see cref="System.Uri">URI</see> 只读
     /// 获取时 若为空则根据<see cref="AbsolutePath">绝对路径</see>
-    /// 与<see cref="AbsolutePath">绝对路径</see>尝试生成新的Uri
+    /// 尝试生成新的Uri
     /// </summary>
     /// <exception cref="ArgumentException">无法生成Uri</exception>
     public Uri Uri
@@ -78,7 +82,7 @@ public struct CPath //TODO：总觉得哪里不对
             if (_uri is not null) return _uri;
             try
             {
-                _uri = new Uri(AbsolutePath);
+                _uri = new Uri(_absolutePath ?? AbsolutePath);
             }
             catch (Exception ex)
             {
@@ -88,6 +92,11 @@ public struct CPath //TODO：总觉得哪里不对
         }
     }
 
+    /// <summary>
+    /// 路径所代表文件或目录的名字 只读
+    /// 获取时 尝试从_absolutePath或_relativePath中生成
+    /// </summary>
+    /// <exception cref="ArgumentException">两个路径都为空</exception>
     public string Name
     {
         get
@@ -102,6 +111,11 @@ public struct CPath //TODO：总觉得哪里不对
         }
     }
 
+    /// <summary>
+    /// 父目录 只读
+    /// 获取时 尝试从_absolutePath或_relativePath中生成
+    /// </summary>
+    /// <exception cref="ArgumentException">因为两个路径都为空</exception>
     public string ParentPath
     {
         get
@@ -109,7 +123,7 @@ public struct CPath //TODO：总觉得哪里不对
             if (_parentPath != null) return _parentPath;
             if (_relativePath == null || _absolutePath == null)
             {
-                if (_relativePath == null && _absolutePath == null) throw new ArgumentException("无法获取name，因为两个路径都为空");
+                if (_relativePath == null && _absolutePath == null) throw new ArgumentException("无法获取parentPath，因为两个路径都为空");
                 if (_relativePath == null) return PathOperation.GetParentPath(_absolutePath!);
             }
             return _parentPath = PathOperation.GetParentPath(_relativePath);
@@ -124,7 +138,7 @@ public struct CPath //TODO：总觉得哪里不对
     public CPath(string absolutePath, string? basePath = null)
     {
         AbsolutePath = PathOperation.GetAbsolutePath(absolutePath, basePath);
-        Base = basePath ?? AppDomain.CurrentDomain.BaseDirectory;
+        _base = basePath ?? null;
     }
 
     /// <summary>
@@ -136,29 +150,54 @@ public struct CPath //TODO：总觉得哪里不对
 
     public CPath(){}
 
-    public CPath Sync(CPathSyncTrigger trigger = CPathSyncTrigger.AbsolutePath)
+    /// <summary>
+    /// （使用某个属性以及它的值）更新本实例的所有属性
+    /// </summary>
+    /// <param name="trigger"><see cref="Synx.Common.Enums.CPathSyncTrigger"/></param>
+    /// <param name="content">trigger所对应的值，可空</param>
+    /// <param name="basePath">手动指定<see cref="Base"/></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">枚举值不正确</exception>
+    public CPath Sync(CPathSyncTrigger trigger = CPathSyncTrigger.AbsolutePath, 
+        string? content = null, string? basePath = null)
     {
-        // 转换为绝对路径操作，为防止依赖使用私有成员避免走索引器逻辑
-        string? primaryPath = trigger switch
+        _base = basePath 
+            ?? _base 
+            ?? PathOperation.GetPathRoot(_absolutePath ?? _relativePath)
+            ?? AppDomain.CurrentDomain.BaseDirectory;
+        switch (trigger)
         {
-            CPathSyncTrigger.AbsolutePath => _absolutePath,
-            CPathSyncTrigger.RelativePath => _relativePath,
-            _ => throw new ArgumentOutOfRangeException(nameof(trigger), trigger, null)
-        };
+            case CPathSyncTrigger.AbsolutePath:
+                _absolutePath = content ?? _absolutePath;
+                ArgumentException.ThrowIfNullOrEmpty(_absolutePath, nameof(_absolutePath));
+                _relativePath = Path.GetRelativePath(_base, _absolutePath);
+                break;
+            case CPathSyncTrigger.RelativePath:
+                _relativePath = content ?? _relativePath;
+                ArgumentException.ThrowIfNullOrEmpty(_relativePath, nameof(_relativePath));
+                _absolutePath = Path.GetFullPath(_relativePath, _base);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(trigger), trigger, null);
+        }
         
-        // 为空则抛出异常，说明作为trigger的参数出现问题
-        ArgumentNullException.ThrowIfNull(primaryPath, nameof(primaryPath));
-        
-        // 更新所有字段
-        _absolutePath = primaryPath;
-        _relativePath = PathOperation.GetRelativePath(primaryPath, _base);
-        _uri = new Uri(primaryPath);
+        _uri = new Uri(_absolutePath);
         _base = Base; // Base.getter 反推base或者返回工作目录
-        _parentPath = PathOperation.GetParentPath(primaryPath);
+        _parentPath = PathOperation.GetParentPath(_absolutePath);
         _name = PathOperation.GetNameFromPath(_absolutePath);
         return this;
     }
 
     /// <summary>获取绝对路径</summary>
     public override string ToString() => _absolutePath ?? string.Empty;
+    
+    public IEnumerator<CPath> GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
+    
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }
