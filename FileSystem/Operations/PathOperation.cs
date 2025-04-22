@@ -20,13 +20,6 @@ public static class PathOperation
     /// <param name="paths"></param>
     /// <returns></returns>
     public static string Combine(params string[] paths) => Path.Combine(paths);
-    
-    /// <summary>
-    /// Converts a string representation of a path into a CPath object.
-    /// </summary>
-    /// <param name="path">The string input representing a file or directory path.</param>
-    /// <returns>A new instance of CPath initialized with the provided string.</returns>
-    public static CPath ToCPath(this string path) => new(path);
 
     /// <summary>
     /// 获取绝对路径
@@ -41,17 +34,6 @@ public static class PathOperation
         return  basePath is null 
             ? Path.GetFullPath(path)
             : Path.GetFullPath(path, basePath);
-    }
-
-    public static string GetAbsolutePath(this CPath cPath, string? basePath = null)
-    {
-        return GetAbsolutePath(cPath.RelativePath, basePath);
-    }
-
-    public static CPath GetAbsolutePath(this ref CPath cPath, string? basePath = null)
-    {
-        cPath.AbsolutePath = GetAbsolutePath(cPath.RelativePath, basePath);
-        return cPath;
     }
 
     /// <summary>
@@ -70,16 +52,6 @@ public static class PathOperation
             ? Path.GetRelativePath(AppDomain.CurrentDomain.BaseDirectory, path)
             : Path.GetRelativePath(basePath, path);
     }
-
-    public static string GetRelativePath(CPath cPath, string? basePath = null) =>
-        GetRelativePath(cPath.RelativePath, basePath);
-
-    /// <summary>
-    /// 返回传入路径的绝对路径的Uri
-    /// </summary>
-    /// <param name="cPath"></param>
-    /// <returns>绝对路径的Uri</returns>
-    public static Uri GetUri(this CPath cPath) => new(cPath.AbsolutePath);
 
     /// <summary>
     /// 获取路径的根目录
@@ -105,8 +77,6 @@ public static class PathOperation
         string[] part = absolutePath.Split('\\');
         return part[^1];
     }
-
-    public static string GetNameFromPath(this CPath cPath) => GetNameFromPath(cPath.AbsolutePath);
 
     /// <summary>
     /// 从路径获取父目录路径
@@ -134,9 +104,7 @@ public static class PathOperation
         }
         return path[..^(pathParts[^1].Length + 1)]; // 处理掉结果末尾的斜杠
     }
-
-    public static string GetParentPath(this CPath cPath) => GetParentPath(cPath.AbsolutePath);
-
+    
     /// <summary>
     /// GetExtension: Func
     /// 如果有，获取扩展名

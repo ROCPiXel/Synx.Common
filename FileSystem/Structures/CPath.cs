@@ -17,6 +17,8 @@ public struct CPath : IEnumerable<CPath>
     private Uri? _uri;
     private string? _parentPath;
     private string? _name;
+    private string? _extension;
+    private string? _realName;
     
     /// <summary>
     /// 绝对路径

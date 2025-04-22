@@ -28,7 +28,7 @@ public interface IFileObject<TFileObject>
     bool IsExists { get; set; }
     
     /// <summary>
-    /// FillInfo: iFunc, +3 Reloads
+    /// FillInfo: iFunc, +3 Overloads
     /// 填充文件信息 
     /// </summary>
     /// <param name="name"></param>

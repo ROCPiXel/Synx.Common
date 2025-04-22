@@ -80,7 +80,7 @@ public static class Rte
         {
             Dictionary<string, string> list = infoLists[i];
             list.Clear();
-            string propertyName = PropertyNameList[i];
+            //string propertyName = PropertyNameList[i];
             // [ATTENTION] 此方法导致跨平台不可用
             var moc = ManagementClassProvider.GetInstances();
             int errCount = 0;

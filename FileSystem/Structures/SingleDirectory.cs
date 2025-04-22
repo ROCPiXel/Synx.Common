@@ -58,7 +58,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     public void FillInfo(string name, string parentPath)
     {
         Name = name;
-        Path = new($"{parentPath}\\{name}");
+        Path = new([parentPath, name]);
     }
 
     public void FillInfo(string name, CPath parentPath)
