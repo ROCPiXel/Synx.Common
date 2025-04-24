@@ -10,44 +10,21 @@ namespace Synx.Common.FileSystem.Interfaces;
 /// <typeparam name="TFileObject">文件对象类型</typeparam>
 public interface IFileObject<TFileObject>
 {
-    /// <summary>
-    /// ObjectType: iIndex
-    /// 对象类型
-    /// </summary>
-    static abstract FileObjectType ObjectType { get; }
+    /// <summary>对象类型（枚举值）</summary>
+    static abstract FileObjectType FileObjectType { get; }
+    
+    /// <summary>对应的<see cref="IFileSystem">文件系统</see></summary>
     static abstract IFileSystem FileSystem { get; }
-    // TODO: 抽出IFileSysAct
     
-    /// <summary>
-    /// iIndex
-    /// 基本信息，支持不存在的路径
-    /// </summary>
-    string Name { get; set; }
-    string Extension { get; }
+    /// <summary><see cref="CPath">复合路径</see>，包含路径与名称相关</summary>
     CPath Path { get; set; }
-    bool IsExists { get; set; }
     
-    /// <summary>
-    /// FillInfo: iFunc, +3 Overloads
-    /// 填充文件信息 
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="parentPath"></param>
-    void FillInfo(string name, string parentPath);
-    void FillInfo(string name, CPath parentPath);
-    void FillInfo(CPath fullCPath);
+    /// <summary>是否存在</summary>
+    bool IsExists { get; set; }
 
-    /// <summary>
-    /// GetInfo: iFunc
-    /// 如果文件存在则需要获取信息
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>如果文件在文件系统存在则获取信息</summary>
     TFileObject GetInfo();
     
-    /// <summary>
-    /// Refresh: iFunc
-    /// 刷新对象的信息
-    /// </summary>
-    /// <returns></returns>
+    /// <summary>刷新文件对象的信息</summary>
     TFileObject Refresh();
 }

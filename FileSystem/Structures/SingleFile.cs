@@ -8,13 +8,10 @@ namespace Synx.Common.FileSystem.Structures;
 public class SingleFile : IFileObject<SingleFile>
 {
     // 对象类型
-    public static FileObjectType ObjectType { get; } = FileObjectType.File;
+    public static FileObjectType FileObjectType { get; } = FileObjectType.File;
     public static IFileSystem FileSystem { get; } = SingleFileSystem.Instance;
 
     // 基本信息
-    public string Name { get; set; } = string.Empty; // 名称
-    public string RealName { get; set; } = string.Empty; // 除去后缀的名字
-    public string Extension { get; set; } = string.Empty; // 扩展名
     public CPath Path { get; set; } // 路径+文件名，完整路径
     public bool IsExists { get; set; } // 是否存在
 
@@ -36,9 +33,6 @@ public class SingleFile : IFileObject<SingleFile>
     /// </summary>
     public SingleFile()
     {
-        Name = string.Empty;
-        Extension = string.Empty;
-        RealName = string.Empty;
         Path = new();
     }
 
@@ -46,52 +40,19 @@ public class SingleFile : IFileObject<SingleFile>
     /// 路径为字符串的构造函数
     /// </summary>
     /// <param name="name">文件名</param>
-    /// <param name="path">文件/文件夹（此处为文件）路径</param>
+    /// <param name="parentPath">路径</param>
     /// <exception cref="Exception"></exception>
-    public SingleFile(string name, string path)
-    {
-        FillInfo(name, path);
-    }
-
-    public SingleFile(string name, CPath path)
-    {
-        FillInfo(name, path.AbsolutePath);
-    }
-
-    public SingleFile(CPath fullPath)
-    {
-        FillInfo(fullPath);
-    }
+    public SingleFile(string name, string parentPath) => Path = new CPath([name, parentPath]);
+    public SingleFile(string fullPath) => Path = new CPath(fullPath);
+    public SingleFile(CPath cPath) => Path = cPath;
 
     // 文件信息相关
-    public void FillInfo(string name, string parentPath)
-    {
-        Name = name;
-        Extension = PathOperation.GetExtension(Name);
-        RealName = PathOperation.GetRealName(Name);
-        Path = new CPath([parentPath, name]);
-        IsExists = File.Exists(Path.AbsolutePath);
-    }
-
-    public void FillInfo(string name, CPath cPath)
-    {
-        FillInfo(name, cPath.AbsolutePath);
-    }
-
-    public void FillInfo(CPath fullCPath)
-    {
-        FillInfo(fullCPath.Name, fullCPath.ParentPath);
-    }
 
     /// <summary>
     /// 获取真实的文件信息
     /// </summary>
     /// <returns></returns>
-    public SingleFile GetInfo()
-    {
-        FillInfo(Name, Path.ParentPath);
-        return FileAttribute.GetFileInfo(this);
-    }
+    public SingleFile GetInfo() => FileAttribute.GetFileInfo(this);
 
     /// <summary>
     /// 刷新并重新获取信息
@@ -99,6 +60,7 @@ public class SingleFile : IFileObject<SingleFile>
     /// <returns></returns>
     public SingleFile Refresh()
     {
+        Path.Sync();
         return GetInfo();
     }
 
@@ -106,11 +68,6 @@ public class SingleFile : IFileObject<SingleFile>
     public OpenWithApp GetAppOpenWith(string extension)
     {
         return 0;
-    }
-
-    public string GetExtension()
-    {
-        return Extension;
     }
 
     public double GetLength()

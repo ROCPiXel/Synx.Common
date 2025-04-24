@@ -27,41 +27,48 @@ public static class FileObjectOperation<TFileSysObj>
     {
         ArgumentNullException.ThrowIfNull(fullPath);
         // 目标路径与唯一的新路径
-        string newFullPath = fullPath;
-        string uniqueFullPath = PathOperation.GenerateUniquePath<TFileSysObj>(newFullPath, suffix);
-        
-        // 创建实例并使用FillInfo模拟构造
-        var newFileSysObj = new TFileSysObj();
-        newFileSysObj.FillInfo(new CPath(newFullPath));
+        string finalPath = fullPath; 
+        string uniqueFullPath = PathOperation.GenerateUniquePath<TFileSysObj>(fullPath, suffix);
+        TFileSysObj newFileSysObj;
 
         // 基础情况：存在且保持，两者冲突
-        if (TFileSysObj.FileSystem.Exists(newFullPath) && creationMethod == CreationMethod.Keep) return null;
+        if (TFileSysObj.FileSystem.Exists(fullPath) && creationMethod == CreationMethod.Keep) return null;
+
+        // 文件不存在：创建，忽略选项
+        // if (!TFileSysObj.FileSystem.Exists(fullPath)) finalPath = fullPath;
+        // 文件存在
+        switch (creationMethod)
+        {
+            // 选择新建且存在：生成唯一路径
+            case CreationMethod.New:
+                finalPath = PathOperation.GenerateUniquePath<TFileSysObj>(fullPath, suffix);
+                break;
+
+            // 选择覆盖且存在：直接覆盖文件
+            // 注意：此选项将覆盖原有文件，谨慎操作
+            case CreationMethod.Cover:
+                // finalPath = fullPath;
+                TFileSysObj.FileSystem.Delete(finalPath);
+                break;
+        }
 
         try
         {
-            if (!TFileSysObj.FileSystem.Exists(newFullPath))
-            {
-                TFileSysObj.FileSystem.Create(newFullPath).Close();
-                return newFileSysObj;
-            }
-
-            switch (creationMethod)
-            {
-                case CreationMethod.New:
-                    TFileSysObj.FileSystem.Create(uniqueFullPath).Close();
-                    newFileSysObj.FillInfo(new CPath(uniqueFullPath));
-                    break;
-
-                // 注意：此选项将覆盖原有文件，谨慎操作
-                case CreationMethod.Cover:
-                    TFileSysObj.FileSystem.Delete(newFullPath);
-                    break;
-            }
+            TFileSysObj.FileSystem.Create(finalPath).Close();
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[ERR] Failed to create FileSysObj: {ex}");
             throw new Exception($"Failed to create FileObject: {ex}");
+        }
+        finally
+        {
+            // 创建实例并更新路径相关信息
+            newFileSysObj = new TFileSysObj()
+            {
+                Path = new CPath(fullPath)
+            };
+            newFileSysObj.Path.Sync();
         }
         return newFileSysObj;
     }

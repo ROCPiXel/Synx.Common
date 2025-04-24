@@ -8,12 +8,10 @@ namespace Synx.Common.FileSystem.Structures;
 public class SingleDirectory : IFileObject<SingleDirectory>
 {
     // 对象类型
-    public static FileObjectType ObjectType { get; } = FileObjectType.Directory;
+    public static FileObjectType FileObjectType { get; } = FileObjectType.Directory;
     public static IFileSystem FileSystem { get; } = DirectoryFileSystem.Instance;
     
     // 基本信息
-    public string Name { get; set; } = string.Empty;
-    public string Extension { get; } = string.Empty;
     public CPath Path { get; set; } // 路径+文件名，完整路径
     public DirectoryInfo? DirectoryInfo { get; set; } // 本文件夹的信息
     public bool IsExists { get; set; } = false;
@@ -37,7 +35,6 @@ public class SingleDirectory : IFileObject<SingleDirectory>
         : this(string.Empty, string.Empty) { }
     public SingleDirectory(string name, string parentPath)
     {
-        FillInfo(name, parentPath);
     }
     public SingleDirectory(string name, CPath parentPath)
         :this(name, parentPath.AbsolutePath) { }
@@ -49,28 +46,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
         :this(directoryInfo.FullName) { }
         
     // 以下：信息与属性相关
-    /// <summary>
-    /// 填充文件夹的对应信息
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="parentPath"></param>
-    /// <returns></returns>
-    public void FillInfo(string name, string parentPath)
-    {
-        Name = name;
-        Path = new([parentPath, name]);
-    }
 
-    public void FillInfo(string name, CPath parentPath)
-    {
-        FillInfo(name, parentPath.AbsolutePath);
-    }
-
-    public void FillInfo(CPath fullCPath)
-    {
-        FillInfo(fullCPath.Name, fullCPath.ParentPath);
-    }
-        
     /// <summary>
     /// 获取本实例的实际信息
     /// </summary>
@@ -106,7 +82,6 @@ public class SingleDirectory : IFileObject<SingleDirectory>
 
     public SingleDirectory Refresh()
     {
-        FillInfo(Name, Path.ParentPath);
         GetInfo();
         return this;
     }

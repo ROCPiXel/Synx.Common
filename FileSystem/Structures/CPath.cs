@@ -14,11 +14,22 @@ public struct CPath : IEnumerable<CPath>
     private string? _absolutePath;
     private string? _relativePath;
     private string? _base;
+    // 以下属性仅含getter
     private Uri? _uri;
     private string? _parentPath;
     private string? _name;
-    private string? _extension;
     private string? _realName;
+    private string? _extension;
+
+    private void SetReadonlyAttributes()
+    {
+        string? primaryPath = _absolutePath ?? _relativePath;
+        ArgumentException.ThrowIfNullOrEmpty(primaryPath, nameof(primaryPath));
+        _parentPath = PathOperation.GetParentPath(primaryPath);
+        _name = PathOperation.GetNameFromPath(primaryPath);
+        _extension = PathOperation.GetExtension(_name);
+        _realName = PathOperation.GetRealName(_name);
+    }
     
     /// <summary>
     /// 绝对路径
@@ -98,18 +109,13 @@ public struct CPath : IEnumerable<CPath>
     /// 路径所代表文件或目录的名字 只读
     /// 获取时 尝试从_absolutePath或_relativePath中生成
     /// </summary>
-    /// <exception cref="ArgumentException">两个路径都为空</exception>
     public string Name
     {
         get
         {
             if (_name != null) return _name;
-            if (_relativePath == null || _absolutePath == null)
-            {
-                if (_relativePath == null && _absolutePath == null) throw new ArgumentException("无法获取name，因为两个路径都为空");
-                if (_relativePath == null) return PathOperation.GetNameFromPath(_absolutePath!);
-            }
-            return _name = PathOperation.GetNameFromPath(_relativePath);
+            SetReadonlyAttributes();
+            return _name!;
         }
     }
 
@@ -117,18 +123,39 @@ public struct CPath : IEnumerable<CPath>
     /// 父目录 只读
     /// 获取时 尝试从_absolutePath或_relativePath中生成
     /// </summary>
-    /// <exception cref="ArgumentException">因为两个路径都为空</exception>
     public string ParentPath
     {
         get
         {
             if (_parentPath != null) return _parentPath;
-            if (_relativePath == null || _absolutePath == null)
-            {
-                if (_relativePath == null && _absolutePath == null) throw new ArgumentException("无法获取parentPath，因为两个路径都为空");
-                if (_relativePath == null) return PathOperation.GetParentPath(_absolutePath!);
-            }
-            return _parentPath = PathOperation.GetParentPath(_relativePath);
+            SetReadonlyAttributes();
+            return _parentPath!;
+        }
+    }
+    
+    /// <summary>
+    /// 真名 除去扩展名的文件名 只读
+    /// </summary>
+    public string RealName
+    {
+        get
+        {
+            if (_realName != null) return _realName;
+            SetReadonlyAttributes();
+            return _realName!;
+        }
+    }
+    
+    /// <summary>
+    /// 扩展名 默认带上点号
+    /// </summary>
+    public string Extension
+    {
+        get
+        {
+            if (_extension != null) return _extension;
+            SetReadonlyAttributes();
+            return _extension!;
         }
     }
     
@@ -139,7 +166,7 @@ public struct CPath : IEnumerable<CPath>
     /// <param name="basePath"></param>
     public CPath(string absolutePath, string? basePath = null)
     {
-        AbsolutePath = PathOperation.GetAbsolutePath(absolutePath, basePath);
+        AbsolutePath = PathOperation.GetAbsolutePath(absolutePath.StandardizePath(), basePath);
         _base = basePath ?? null;
     }
 
@@ -148,7 +175,7 @@ public struct CPath : IEnumerable<CPath>
     /// </summary>
     /// <param name="paths"></param>
     public CPath(params string[] paths):
-        this(Path.Combine(paths)) {}
+        this(Path.Combine(paths).StandardizePath()) {}
 
     public CPath(){}
 
@@ -185,8 +212,7 @@ public struct CPath : IEnumerable<CPath>
         
         _uri = new Uri(_absolutePath);
         _base = Base; // Base.getter 反推base或者返回工作目录
-        _parentPath = PathOperation.GetParentPath(_absolutePath);
-        _name = PathOperation.GetNameFromPath(_absolutePath);
+        SetReadonlyAttributes();
         return this;
     }
 

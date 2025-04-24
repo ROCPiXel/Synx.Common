@@ -22,6 +22,14 @@ public static class PathOperation
     public static string Combine(params string[] paths) => Path.Combine(paths);
 
     /// <summary>
+    /// 标准化一个路径
+    /// 包含 去除末尾空格，标准化分隔符，去除多余的分隔符
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static string StandardizePath(this string path) => path.Replace('/', '\\').TrimEnd().TrimEnd('\\', '/');
+
+    /// <summary>
     /// 获取绝对路径
     /// 推荐使用<see cref="System.IO.Path.GetFullPath(string)">Path.GetFullPath</see>代替
     /// </summary>

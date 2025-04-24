@@ -13,6 +13,7 @@ public static class FileAttribute
     /// <exception cref="FileNotFoundException"></exception>
     public static SingleFile GetFileInfo(SingleFile singleFile)
     {
+        ArgumentException.ThrowIfNullOrEmpty(singleFile.Path.AbsolutePath, nameof(singleFile));
         if (!File.Exists(singleFile.Path.AbsolutePath))
         {
             throw new FileNotFoundException();
@@ -21,7 +22,6 @@ public static class FileAttribute
         FileInfo fileInfo = new(singleFile.Path.AbsolutePath);
         singleFile.FileInfo = fileInfo;
 
-        singleFile.Extension = fileInfo.Extension;
         singleFile.Length = fileInfo.Length;
         singleFile.IsReadOnly = fileInfo.IsReadOnly;
 
