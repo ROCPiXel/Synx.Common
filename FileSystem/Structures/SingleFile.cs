@@ -2,6 +2,7 @@
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
 using Synx.Common.FileSystem.Providers;
+using Synx.Common.FileSystem.Providers.FIle;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -24,7 +25,7 @@ public class SingleFile : IFileObject<SingleFile>
     public DateTime? CreateTime { get; set; }
     public DateTime? ModifyTime { get; set; }
     public DateTime? AccessTime { get; set; }
-    public string? OpenWith { get; set; } = string.Empty;
+    public string? OpenWith { get; set; }
 
     /// <summary>
     /// 空对象

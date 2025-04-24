@@ -1,6 +1,6 @@
 ﻿using Synx.Common.FileSystem.Interfaces;
 
-namespace Synx.Common.FileSystem.Providers;
+namespace Synx.Common.FileSystem.Providers.FIle;
 
 /// <summary>
 /// FileSystemBase: Abstract Class

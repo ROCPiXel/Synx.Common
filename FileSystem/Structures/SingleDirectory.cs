@@ -2,6 +2,7 @@
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
 using Synx.Common.FileSystem.Providers;
+using Synx.Common.FileSystem.Providers.FIle;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -37,11 +38,11 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     {
     }
     public SingleDirectory(string name, CPath parentPath)
-        :this(name, parentPath.AbsolutePath) { }
+        :this(name, parentPath.Absolute) { }
     public SingleDirectory(string fullPath)
         :this(PathOperation.GetNameFromPath(fullPath), PathOperation.GetParentPath(fullPath)) { }
     public SingleDirectory(CPath fullCPath)
-        :this(fullCPath.AbsolutePath) { }
+        :this(fullCPath.Absolute) { }
     public SingleDirectory(DirectoryInfo directoryInfo)
         :this(directoryInfo.FullName) { }
         

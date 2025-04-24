@@ -13,13 +13,13 @@ public static class FileAttribute
     /// <exception cref="FileNotFoundException"></exception>
     public static SingleFile GetFileInfo(SingleFile singleFile)
     {
-        ArgumentException.ThrowIfNullOrEmpty(singleFile.Path.AbsolutePath, nameof(singleFile));
-        if (!File.Exists(singleFile.Path.AbsolutePath))
+        ArgumentException.ThrowIfNullOrEmpty(singleFile.Path.Absolute, nameof(singleFile));
+        if (!File.Exists(singleFile.Path.Absolute))
         {
             throw new FileNotFoundException();
         }
 
-        FileInfo fileInfo = new(singleFile.Path.AbsolutePath);
+        FileInfo fileInfo = new(singleFile.Path.Absolute);
         singleFile.FileInfo = fileInfo;
 
         singleFile.Length = fileInfo.Length;
@@ -46,6 +46,6 @@ public static class FileAttribute
 
     public static double GetLength(SingleFile singleFile)
     {
-        return new FileInfo(singleFile.Path.AbsolutePath).Length;
+        return new FileInfo(singleFile.Path.Absolute).Length;
     }
 }

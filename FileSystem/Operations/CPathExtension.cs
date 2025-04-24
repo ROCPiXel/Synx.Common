@@ -23,37 +23,37 @@ public static class CPathExtension
     /// </summary>
     /// <param name="cPath"></param>
     /// <returns></returns>
-    public static string StandardizePath(this CPath cPath) => cPath.AbsolutePath.StandardizePath();
+    public static string StandardizePath(this CPath cPath) => cPath.Absolute.StandardizePath();
 
     public static string GetAbsolutePath(this CPath cPath, string? basePath = null)
     {
-        return PathOperation.GetAbsolutePath(cPath.RelativePath, basePath);
+        return PathOperation.GetAbsolutePath(cPath.Relative, basePath);
     }
 
     public static CPath GetAbsolutePath(this ref CPath cPath, string? basePath = null)
     {
-        cPath.AbsolutePath = PathOperation.GetAbsolutePath(cPath.RelativePath, basePath);
+        cPath.Absolute = PathOperation.GetAbsolutePath(cPath.Relative, basePath);
         return cPath;
     }
     
     public static string GetRelativePath(CPath cPath, string? basePath = null) =>
-        PathOperation.GetRelativePath(cPath.RelativePath, basePath); 
+        PathOperation.GetRelativePath(cPath.Relative, basePath); 
     
     /// <summary>
     /// 生成 对应的uri（不更新）
     /// </summary>
     /// <param name="cPath"></param>
     /// <returns>绝对路径的Uri</returns>
-    public static Uri GetUri(this CPath cPath) => new(cPath.AbsolutePath);
+    public static Uri GetUri(this CPath cPath) => new(cPath.Absolute);
     
-    public static string GetNameFromPath(this CPath cPath) => PathOperation.GetNameFromPath(cPath.AbsolutePath);
+    public static string GetNameFromPath(this CPath cPath) => PathOperation.GetNameFromPath(cPath.Absolute);
     
-    public static string GetParentPath(this CPath cPath) => PathOperation.GetParentPath(cPath.AbsolutePath);
+    public static string GetParentPath(this CPath cPath) => PathOperation.GetParentPath(cPath.Absolute);
 
     public static T CreateFileObject<T>(this CPath cPath) 
         where T : IFileObject<T>, new()
     {
-        ArgumentException.ThrowIfNullOrEmpty(cPath.AbsolutePath, nameof(cPath));
+        ArgumentException.ThrowIfNullOrEmpty(cPath.Absolute, nameof(cPath));
         return new T
         {
             Path = cPath
@@ -63,8 +63,8 @@ public static class CPathExtension
     public static T CreateFileObjectInstance<T>(this CPath cPath)
         where T : class, IFileObject<T>, new()
     {
-        ArgumentException.ThrowIfNullOrEmpty(cPath.AbsolutePath, nameof(cPath));
-        FileObjectOperation<T>.Create(cPath.AbsolutePath);
+        ArgumentException.ThrowIfNullOrEmpty(cPath.Absolute, nameof(cPath));
+        FileObjectOperation<T>.Create(cPath.Absolute);
         return new T
         {
             Path = cPath

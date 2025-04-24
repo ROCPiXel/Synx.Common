@@ -1,6 +1,6 @@
 ﻿using Synx.Common.FileSystem.Operations;
 
-namespace Synx.Common.FileSystem.Providers;
+namespace Synx.Common.FileSystem.Providers.FIle;
 
 public class SingleFileSystem : FileSystemBase<SingleFileSystem>
 {

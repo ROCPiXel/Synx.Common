@@ -75,7 +75,7 @@ public static class FileObjectOperation<TFileSysObj>
 
     public static TFileSysObj? Create(CPath fullCPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
-        => Create(fullCPath.AbsolutePath, creationMethod, suffix);
+        => Create(fullCPath.Absolute, creationMethod, suffix);
     
     public static TFileSysObj? Create(string name, string parentPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
@@ -83,12 +83,12 @@ public static class FileObjectOperation<TFileSysObj>
     
     public static TFileSysObj? Create(string name, CPath parentCPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix) 
-        => Create(Path.Combine([parentCPath.AbsolutePath, name]), creationMethod, suffix);
+        => Create(Path.Combine([parentCPath.Absolute, name]), creationMethod, suffix);
 
     public static TFileSysObj? Create(TFileSysObj fileSysObj,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
-        fileSysObj = Create(fileSysObj.Path.AbsolutePath, creationMethod, suffix) ?? fileSysObj;
+        fileSysObj = Create(fileSysObj.Path.Absolute, creationMethod, suffix) ?? fileSysObj;
         return fileSysObj;
     }
 
@@ -116,11 +116,11 @@ public static class FileObjectOperation<TFileSysObj>
         return false;
     }
     
-    public static bool Delete(CPath fullPath) => Delete(fullPath.AbsolutePath);
+    public static bool Delete(CPath fullPath) => Delete(fullPath.Absolute);
     
     public static bool Delete(string name, string parentPath) => Delete(name + parentPath);
     
-    public static bool Delete(TFileSysObj fileSysObj) => Delete(fileSysObj.Path.AbsolutePath);
+    public static bool Delete(TFileSysObj fileSysObj) => Delete(fileSysObj.Path.Absolute);
 
     /// <summary>
     /// Rename: tFunc
@@ -136,7 +136,7 @@ public static class FileObjectOperation<TFileSysObj>
     {
         var creation = Create(sourceFPath, creationMethod, suffix);
         if(creation == null) return null;
-        var uniquePath = creation.Path.AbsolutePath;
+        var uniquePath = creation.Path.Absolute;
 
         try
         {
@@ -153,7 +153,7 @@ public static class FileObjectOperation<TFileSysObj>
     
     public static TFileSysObj? Rename(CPath sourceCPath, CPath targetCPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
-        => Rename(sourceCPath.AbsolutePath, targetCPath.AbsolutePath, creationMethod, suffix);
+        => Rename(sourceCPath.Absolute, targetCPath.Absolute, creationMethod, suffix);
     
     public static TFileSysObj? Rename(string sourceName, string targetName, string parentPath,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
@@ -163,7 +163,7 @@ public static class FileObjectOperation<TFileSysObj>
     public static TFileSysObj Rename(TFileSysObj source, TFileSysObj target,
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
-        target = Rename(source.Path.AbsolutePath, target.Path.AbsolutePath, creationMethod, suffix) ?? target;
+        target = Rename(source.Path.Absolute, target.Path.Absolute, creationMethod, suffix) ?? target;
         return target;
     }
     
@@ -171,7 +171,7 @@ public static class FileObjectOperation<TFileSysObj>
     public static TFileSysObj Rename(TFileSysObj source, string targetFullPath, 
         CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
     {
-        source = Rename(source.Path.AbsolutePath, targetFullPath, creationMethod, suffix) ?? source;
+        source = Rename(source.Path.Absolute, targetFullPath, creationMethod, suffix) ?? source;
         return source;
     }
 }

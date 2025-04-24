@@ -27,7 +27,12 @@ public static class PathOperation
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static string StandardizePath(this string path) => path.Replace('/', '\\').TrimEnd().TrimEnd('\\', '/');
+    public static string StandardizePath(this string path)
+    {
+        path = path.Replace('/', '\\').TrimEnd().TrimEnd('\\', '/');
+        if (!path.Contains('\\')) path += "\\";
+        return path;
+    }
 
     /// <summary>
     /// 获取绝对路径

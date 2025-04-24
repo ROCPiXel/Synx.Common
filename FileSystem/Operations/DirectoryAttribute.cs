@@ -13,7 +13,7 @@ public static class DirectoryAttribute
     /// <exception cref="DirectoryNotFoundException"></exception>
     public static SingleDirectory GetDirectoryInfo(SingleDirectory singleDirectory)
     {
-        DirectoryInfo directoryInfo = new(singleDirectory.Path.AbsolutePath);
+        DirectoryInfo directoryInfo = new(singleDirectory.Path.Absolute);
         singleDirectory.DirectoryInfo = directoryInfo;
         singleDirectory.IsExists = directoryInfo.Exists;
 

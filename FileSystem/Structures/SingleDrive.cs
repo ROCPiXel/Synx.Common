@@ -1,6 +1,9 @@
-﻿namespace Synx.Common.FileSystem.Structures;
+﻿using Synx.Common.Utils;
 
-public struct SingleDrive
+namespace Synx.Common.FileSystem.Structures;
+
+[Serializable]
+public class SingleDrive
 {
     // 常规与路径
     public string Name { get; set; } = string.Empty;
@@ -14,20 +17,32 @@ public struct SingleDrive
     public long Space { get; set; } = 0;
     public long Used { get; set; } = 0;
     public long Free { get; set; } = 0;
-    public double SpaceGiB { get; set; } = 0;
-    public double UsedGiB { get; set; } = 0;
-    public double FreeGiB { get; set; } = 0;
-    public double Usage {  get; set; } = 0;
+    public double SpaceGiB { get; private set; } = 0;
+    public double UsedGiB { get; private set; } = 0;
+    public double FreeGiB { get; private set; } = 0;
+    public double Usage {  get; private set; } = 0;
     // 附加属性
-    public bool IsLocked { get; set; } = false;
+    // public bool IsLocked { get; set; } = false;
     public bool IsReady { get; set; } = false;
 
     public DriveInfo? DriveInfo { get; set; }
-    public Dictionary<string, string>? Properties { get; set; } = [];
+    // public Dictionary<string, string>? Properties { get; set; } = [];
 
-    public SingleDrive() => FillInfo(string.Empty, string.Empty);
+    public SingleDrive() { }
     public SingleDrive(CPath driveLetter) => FillInfo(driveLetter);
     public SingleDrive(string driveLetter) => FillInfo(driveLetter);
+
+    /// <summary>
+    /// 计算空间相关属性
+    /// </summary>
+    public void CalculateSpace()
+    {
+        SpaceGiB = SpaceUnitExchange.GetGiBSpace(Space);
+        Used = Space - Free;
+        UsedGiB = SpaceUnitExchange.GetGiBSpace(Used);
+        FreeGiB = SpaceUnitExchange.GetGiBSpace(Free);
+        Usage = (double)Used / Space;
+    }
 
     /// <summary>
     /// 获取信息
@@ -48,7 +63,7 @@ public struct SingleDrive
 
     public void FillInfo(CPath driveLetter)
     {
-        FillInfo(string.Empty, driveLetter.AbsolutePath);
+        FillInfo(string.Empty, driveLetter.Absolute);
     }
 
     // TODO
@@ -60,27 +75,5 @@ public struct SingleDrive
     public SingleDrive Refresh()
     {
         throw new NotImplementedException();
-    }
-
-    public Dictionary<string,string> GetStringProperties()
-    {
-        Properties.Clear();
-        Properties = new()
-        {
-            ["Name"] = Name,
-            ["UNCPath"] = Path.RelativePath,
-            ["Path"] = Path.AbsolutePath,
-            ["DriveLetter"] = DriveLetter,
-            ["FileSystem"] = FileSystem.ToString(),
-            ["DriveType"] = DriveType.ToString(),
-            ["TotalSpace"] = Space.ToString(),
-            ["Used"] = Used.ToString(),
-            ["Free"] = Free.ToString(),
-            ["TotalSpaceGiB"] = SpaceGiB.ToString(),
-            ["UsedGiB"] = UsedGiB.ToString(),
-            ["FreeGiB"] = FreeGiB.ToString(),
-            ["Usage"] = Usage.ToString(),
-        };
-        return Properties;
     }
 }
