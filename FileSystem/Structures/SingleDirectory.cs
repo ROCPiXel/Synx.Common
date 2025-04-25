@@ -34,9 +34,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     // 构造函数
     public SingleDirectory()
         : this(string.Empty, string.Empty) { }
-    public SingleDirectory(string name, string parentPath)
-    {
-    }
+    public SingleDirectory(string name, string parentPath) { }
     public SingleDirectory(string name, CPath parentPath)
         :this(name, parentPath.Absolute) { }
     public SingleDirectory(string fullPath)
@@ -91,11 +89,11 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <summary>
     /// 创建本实例
     /// </summary>
-    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
+    /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
     /// <param name="suffix"></param>
-    public void Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    public void Create(FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
     {
-        FileObjectOperation<SingleDirectory>.Create(this, creationMethod, suffix);
+        FileObjectOperation<SingleDirectory>.Create(this, fileConflictResolution, suffix);
     }
     
     /// <summary>
@@ -108,14 +106,14 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// 重命名本实例
     /// </summary>
     /// <param name="newFullPath">新的全路径</param>
-    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
+    /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
     /// <param name="suffix">后缀</param>
     /// <returns>重命名后的新对象</returns>
     public SingleDirectory? Rename(string newFullPath,
-        CreationMethod creationMethod = CreationMethod.Keep,
+        FileConflictResolution fileConflictResolution = FileConflictResolution.Keep,
         string suffix = Definition.DefaultSuffix)
     {
-        var newDirectory = FileObjectOperation<SingleDirectory>.Rename(this, newFullPath, creationMethod, suffix); 
+        var newDirectory = FileObjectOperation<SingleDirectory>.Rename(this, newFullPath, fileConflictResolution, suffix); 
         GetInfo();
         return newDirectory;
     }

@@ -1,7 +1,7 @@
 ﻿namespace Synx.Common.FileSystem.Interfaces;
 
 /// <summary>
-/// IFileSystem: Interface
+/// IFileSystem: TaskList
 /// 用于定义一个文件系统（数据源）所含的信息与操作
 /// </summary>
 public interface IFileSystem

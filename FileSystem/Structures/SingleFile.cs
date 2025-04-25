@@ -79,12 +79,12 @@ public class SingleFile : IFileObject<SingleFile>
     /// <summary>
     /// 使用实例信息创建文件
     /// </summary>
-    /// <param name="creationMethod">创建方式<see cref="CreationMethod"/></param>
+    /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
-    public SingleFile? Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    public SingleFile? Create(FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
     {
-        return FileObjectOperation<SingleFile>.Create(this, creationMethod, suffix);
+        return FileObjectOperation<SingleFile>.Create(this, fileConflictResolution, suffix);
     }
 
     /// <summary>
@@ -100,16 +100,16 @@ public class SingleFile : IFileObject<SingleFile>
     /// 重命名文件，本实例数据将自动更新
     /// </summary>
     /// <param name="newFullPath"></param>
-    /// <param name="creationMethod"></param>
+    /// <param name="fileConflictResolution"></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
     public SingleFile? Rename(string newFullPath,
-        CreationMethod creationMethod = CreationMethod.Keep,
+        FileConflictResolution fileConflictResolution = FileConflictResolution.Keep,
         string suffix = Definition.DefaultSuffix)
     {
         var newFile = FileObjectOperation<SingleFile>.Rename(this,
             newFullPath,
-            creationMethod,
+            fileConflictResolution,
             suffix);
         GetInfo();
         return newFile;

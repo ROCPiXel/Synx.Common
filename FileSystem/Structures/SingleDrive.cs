@@ -17,13 +17,13 @@ public class SingleDrive
     public long Space { get; set; } = 0;
     public long Used { get; set; } = 0;
     public long Free { get; set; } = 0;
-    public double SpaceGiB { get; private set; } = 0;
-    public double UsedGiB { get; private set; } = 0;
-    public double FreeGiB { get; private set; } = 0;
-    public double Usage {  get; private set; } = 0;
+    public double SpaceGiB { get; private set; }
+    public double UsedGiB { get; private set; }
+    public double FreeGiB { get; private set; }
+    public double Usage { get; private set; }
     // 附加属性
     // public bool IsLocked { get; set; } = false;
-    public bool IsReady { get; set; } = false;
+    public bool IsReady { get; set; }
 
     public DriveInfo? DriveInfo { get; set; }
     // public Dictionary<string, string>? Properties { get; set; } = [];

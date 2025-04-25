@@ -4,7 +4,7 @@ using Synx.Common.FileSystem.Structures;
 namespace Synx.Common.FileSystem.Interfaces;
 
 /// <summary>
-/// IFileObject: Interface
+/// IFileObject: TaskList
 /// 单个文件对象的基础信息
 /// </summary>
 /// <typeparam name="TFileObject">文件对象类型</typeparam>
