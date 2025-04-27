@@ -1,29 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime;
-using System.Management;
+﻿using System.Management;
+using System.Runtime.Versioning;
 
 namespace Synx.Common;
 
 /// <summary>
-/// VEnvironment - Class
+/// Rte: Runtime Environment - Class
 /// 创建实例以获取运行环境信息以及各项属性
 /// </summary>
-public static class RTE
+[UnsupportedOSPlatform("iOS")]
+[UnsupportedOSPlatform("Android")]
+[UnsupportedOSPlatform("Browser")]
+[UnsupportedOSPlatform("macOS")]
+[UnsupportedOSPlatform("Linux")]
+public static class Rte
 {
     /// <summary>
     /// 要获取的属性名称
     /// </summary>
-    private static string[] propertyNameList { get; set; } = 
-        { "Win32_ComputerSystemProduct", 
+    private static string[] PropertyNameList { get; set; } =
+    [
+        "Win32_ComputerSystemProduct", 
           "Win32_BaseBoard", 
           "Win32_Processor", 
           "Win32_PhysicalMemory", 
           "Win32_VideoController", 
-          "Win32_LogicalDisk" };
+          "Win32_LogicalDisk"
+    ];
+    
     /// <summary>
     /// 数据提供方
     /// ManagementClass当前仅限Windows平台
@@ -31,34 +34,34 @@ public static class RTE
     public static ManagementClass ManagementClassProvider { get; set; } = new ManagementClass();
 
     // 需要含有private以供内部操作
-    private static string userName = Environment.MachineName; //系统名称
-    private static string osVersionDescription = Environment.OSVersion.ToString(); //系统版本概述
-    private static string osArchitecture = System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString(); //系统架构
-    private static string osPath = Environment.SystemDirectory; //系统路径
-    private static string workspacePath = Environment.CurrentDirectory; //工作环境目录
+    private static string _userName = Environment.MachineName; //系统名称
+    private static string _osVersionDescription = Environment.OSVersion.ToString(); //系统版本概述
+    private static string _osArchitecture = System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString(); //系统架构
+    private static string _osPath = Environment.SystemDirectory; //系统路径
+    private static string _workspacePath = Environment.CurrentDirectory; //工作环境目录
 
-    public static string UserName { get { return userName; } } //系统名称
-    public static string OSVersionDescription { get { return osVersionDescription; } } //系统版本概述
-    public static string OSArchitecture { get { return osArchitecture; } } //系统架构
-    public static string OSPath { get { return osPath; } } //系统路径
-    public static string WorkspacePath { get { return workspacePath; } } //工作环境目录
+    public static string UserName => _userName; //系统名称
+    public static string OsVersionDescription => _osVersionDescription; //系统版本概述
+    public static string OsArchitecture => _osArchitecture; //系统架构
+    public static string OsPath => _osPath; //系统路径
+    public static string WorkspacePath => _workspacePath; //工作环境目录
 
     //以下属性为列表，含详细信息
     //默认为空，获取系统信息请使用GetHardwareInfo();
     public static Dictionary<string, string> BasicSystemInfo { get; } = new(); //计算机基本信息
     public static Dictionary<string, string> BaseBoardInfo { get; } = new(); // 主板信息
-    public static Dictionary<string, string> CPUInfo { get; } = new();
-    public static Dictionary<string, string> RAMInfo { get; } = new();
-    public static Dictionary<string, string> GPUInfo { get; } = new();
+    public static Dictionary<string, string> CpuInfo { get; } = new();
+    public static Dictionary<string, string> RamInfo { get; } = new();
+    public static Dictionary<string, string> GpuInfo { get; } = new();
     public static Dictionary<string, string> DiskInfo { get; } = new();
 
     private static void GetBasicSystemInfo()
     {
-        userName = Environment.MachineName;
-        osVersionDescription = Environment.OSVersion.ToString();
-        osArchitecture = System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString();
-        osPath = Environment.SystemDirectory;
-        workspacePath = Environment.CurrentDirectory;
+        _userName = Environment.MachineName;
+        _osVersionDescription = Environment.OSVersion.ToString();
+        _osArchitecture = System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString();
+        _osPath = Environment.SystemDirectory;
+        _workspacePath = Environment.CurrentDirectory;
     }
 
     /// <summary>
@@ -70,14 +73,14 @@ public static class RTE
     {
         List<Dictionary<string, string>> infoLists = new();
         infoLists.Add(BasicSystemInfo); infoLists.Add(BaseBoardInfo);
-        infoLists.Add(CPUInfo); infoLists.Add(RAMInfo); infoLists.Add(GPUInfo); infoLists.Add(DiskInfo);
+        infoLists.Add(CpuInfo); infoLists.Add(RamInfo); infoLists.Add(GpuInfo); infoLists.Add(DiskInfo);
 
         // TODO：重复项较难操作，建议更换数据类型
         for (int i = 0; i < infoLists.Count; i++)
         {
             Dictionary<string, string> list = infoLists[i];
             list.Clear();
-            string propertyName = propertyNameList[i];
+            //string propertyName = PropertyNameList[i];
             // [ATTENTION] 此方法导致跨平台不可用
             var moc = ManagementClassProvider.GetInstances();
             int errCount = 0;
@@ -122,7 +125,7 @@ public static class RTE
     /// 非从列表中提取而获取的属性信息，请使用索引器
     /// </summary>
     /// <returns>string</returns>
-    public static string GetCPUInfo()
+    public static string GetCpuInfo()
     {
         return string.Empty;
     }
@@ -135,17 +138,4 @@ public static class RTE
     {
         return WorkspacePath;
     }
-}
-
-/// <summary>
-/// SystemStatus - Class
-/// 用于高频获取硬件使用信息
-/// </summary>
-public class SystemStatus
-{
-    public double CPUUsage { get; set; }
-    public double GPUUsage { get; set; }
-    public double RAMUsage { get; set; }
-
-    public SystemStatus() { }
 }

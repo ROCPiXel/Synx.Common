@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Synx.Common;
+﻿namespace Synx.Common;
 
 /// <summary>
 /// Definition: Class
@@ -13,7 +7,6 @@ namespace Synx.Common;
 public static class Definition
 {
     // 一些常用存储容量关于Byte关系的常量，KiB = 1024 Bytes, KB = 1000 Bytes
-
     public const int Byte = 1;
 
     public const long KiB = 1024 * Byte;
@@ -37,9 +30,7 @@ public static class Definition
     // Tick/Microsecond = 10, Tick/Second = 10^7;
     // Second > (x1000) Millisecond > (x1000) MicroSecond > (x1000) Nanosecond
 
-    /// <summary>
-    /// 每个Tick所含有的ns纳秒
-    /// </summary>
+    /// <summary>每个Tick所含有的ns纳秒</summary>
     public const long NanosecondsPerTick = 100; 
 
     public const long TicksPerMicrosecond = 10; // 微秒
@@ -58,22 +49,29 @@ public static class Definition
     public const int DaysPerMonth = 30;
     public const int MonthsPerYear = 12;
     public const int DaysPerYear = 365;
-    public const int DaysPerLeapYear = 366;
+    public const int DaysPerLeapYear = 366; // 闰年366天
 
-    /// <summary>
-    /// 格林威治时间1970年01月01日00时00分00秒
-    /// </summary>
+    /// <summary>格林威治时间1970年01月01日00时00分00秒</summary>
     public static DateTime DateBegin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-    /// <summary>
-    /// 格林威治时间1970年01月01日00时00分00秒所代表的Tick数
-    /// </summary>
+    /// <summary>格林威治时间1970年01月01日00时00分00秒所代表的Tick数</summary>
     public const long TickBegin = 621355968000000000;
     public const long TimeStampBegin = 0;
 
 
     // 文件相关的定义
-    /// <summary>
-    /// 最大扫描深度
-    /// </summary>
-    public const int DirectoryScanningMaxDepth = 1000;
+    /// <summary>最大扫描深度</summary>
+    public const int DirectoryScanningMaxDepth = 1024;
+    public const int FileNameMaxLength = int.MaxValue;
+    
+#if WINDOWS
+    public const char LocalDirectorySeparatorChar = '\\';
+    public const char AltDirectorySeparatorChar = '/';
+#elif MACOS || LINUX || IOS || BROWSER
+    public const char LocalDirectorySeparatorChar = '/';
+    public const char AltDirectorySeparatorChar = '/';
+#else
+    public const char LocalDirectorySeparatorChar = '\\';
+    public const char AltDirectorySeparatorChar = '/';
+#endif
+    
 }

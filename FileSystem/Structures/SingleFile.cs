@@ -1,23 +1,19 @@
-﻿using Synx.Common.Base;
-using Synx.Common.Enums;
-using Synx.Common.FileSystem.Attributes;
+﻿using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
-using Synx.Common.Utils;
+using Synx.Common.FileSystem.Providers;
+using Synx.Common.FileSystem.Providers.FIle;
 
 namespace Synx.Common.FileSystem.Structures;
 
-public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
+public class SingleFile : IFileObject<SingleFile>
 {
     // 对象类型
-    public static FileObjectType ObjectType { get; } = FileObjectType.File;
-    
+    public static FileObjectType FileObjectType { get; } = FileObjectType.File;
+    public static IFileSystem FileSystem { get; } = SingleFileSystem.Instance;
+
     // 基本信息
-    public string Name { get; set; } = string.Empty; // 名称
-    public string RealName { get; set; } = string.Empty; // 除去后缀的名字
-    public string Extension { get; set; } = string.Empty; // 扩展名
     public CPath Path { get; set; } // 路径+文件名，完整路径
-    public CPath ParentPath { get; set; } // 所在文件夹路径
     public bool IsExists { get; set; } // 是否存在
 
     // 以下为可空属性，当实例不存在为空
@@ -29,25 +25,7 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     public DateTime? CreateTime { get; set; }
     public DateTime? ModifyTime { get; set; }
     public DateTime? AccessTime { get; set; }
-    public string? OpenWith { get; set; } = string.Empty;
-    
-    // 实现IFileSysAct
-    public Func<string, bool> GetExistsAction { get; }
-        = (fullPath) => File.Exists(fullPath);
-    public Action<string> CreateAction { get; } 
-        = (fileFullPath) => File.Create(fileFullPath);
-    public Action<string> DeleteAction { get; } 
-        = (fileFullPath) => File.Delete(fileFullPath);
-    public Action<string, string> RenameAction { get; } 
-        = (sourceFPath, targetFPath) => File.Move(sourceFPath, targetFPath);
-    public Action<string, string> GenerateUniquePathAction { get; } 
-        = (sourceFPath, suffix) => PathStringProc.GenerateFilePath(sourceFPath, suffix);
-    
-    static bool IFileSysAct.GetExistsAction(string fullPath) => File.Exists(fullPath);
-    static void IFileSysAct.CreateAction(string fullPath) => File.Create(fullPath);
-    static void IFileSysAct.DeleteAction(string fullPath) => File.Delete(fullPath);
-    static void IFileSysAct.MoveAction(string sourceFPath, string targetFPath) =>  File.Move(sourceFPath, targetFPath);
-    static string IFileSysAct.GenerateUniquePathAction(string fullPath, string suffix) => PathStringProc.GenerateFilePath(fullPath, suffix);
+    public string? OpenWith { get; set; }
 
     /// <summary>
     /// 空对象
@@ -56,61 +34,26 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     /// </summary>
     public SingleFile()
     {
-        Name = string.Empty;
-        Extension = string.Empty;
-        RealName = string.Empty;
         Path = new();
-        ParentPath = new();
     }
+
     /// <summary>
     /// 路径为字符串的构造函数
     /// </summary>
     /// <param name="name">文件名</param>
-    /// <param name="path">文件/文件夹（此处为文件）路径</param>
+    /// <param name="parentPath">路径</param>
     /// <exception cref="Exception"></exception>
-    public SingleFile(string name, string path)
-    {
-        FillInfo(name, path);
-    }
-
-    public SingleFile(string name, CPath path)
-    {
-        FillInfo(name, path.AbsolutePath);
-    }
-
-    public SingleFile(CPath fullPath)
-    {
-        FillInfo(fullPath);
-    }
+    public SingleFile(string name, string parentPath) => Path = new CPath([name, parentPath]);
+    public SingleFile(string fullPath) => Path = new CPath(fullPath);
+    public SingleFile(CPath cPath) => Path = cPath;
 
     // 文件信息相关
-    public void FillInfo(string name, string parentPath)
-    {
-        Name = name;
-        Extension = PathStringProc.GetExtension(Name);
-        RealName = PathStringProc.GetRealName(Name);
-        ParentPath = new CPath(parentPath);
-        Path = new CPath(parentPath + name);
-        IsExists = File.Exists(Path.AbsolutePath);
-    }
-    public void FillInfo(string name, CPath cPath)
-    {
-        FillInfo(name, cPath.AbsolutePath);
-    }
-    public void FillInfo(CPath fullCPath)
-    {
-        FillInfo(fullCPath.Name, fullCPath.ParentPath);
-    }
 
     /// <summary>
     /// 获取真实的文件信息
     /// </summary>
     /// <returns></returns>
-    public SingleFile GetInfo()
-    {
-        FillInfo(Name, Path.AbsolutePath);
-        return FileAttribute.GetFileInfo(this);
-    }
+    public SingleFile GetInfo() => FileAttribute.GetFileInfo(this);
 
     /// <summary>
     /// 刷新并重新获取信息
@@ -118,6 +61,7 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     /// <returns></returns>
     public SingleFile Refresh()
     {
+        Path.Sync();
         return GetInfo();
     }
 
@@ -125,11 +69,6 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     public OpenWithApp GetAppOpenWith(string extension)
     {
         return 0;
-    }
-
-    public string GetExtension()
-    {
-        return Extension;
     }
 
     public double GetLength()
@@ -140,12 +79,12 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     /// <summary>
     /// 使用实例信息创建文件
     /// </summary>
-    /// <param name="creationMethod"></param>
+    /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
-    public void Create(CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    public SingleFile? Create(FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
     {
-        FileObjectOperation<SingleFile>.Create(this, creationMethod, suffix);
+        return FileObjectOperation<SingleFile>.Create(this, fileConflictResolution, suffix);
     }
 
     /// <summary>
@@ -160,15 +99,21 @@ public class SingleFile : IFileSysAct, IFileSysObj<SingleFile>
     /// <summary>
     /// 重命名文件，本实例数据将自动更新
     /// </summary>
-    /// <param name="newName"></param>
-    /// <param name="creationMethod"></param>
+    /// <param name="newFullPath"></param>
+    /// <param name="fileConflictResolution"></param>
     /// <param name="suffix"></param>
     /// <returns></returns>
-    public SingleFile? Rename(string newName, 
-        CreationMethod creationMethod = CreationMethod.Keep, string suffix = Definition.DefaultSuffix)
+    public SingleFile? Rename(string newFullPath,
+        FileConflictResolution fileConflictResolution = FileConflictResolution.Keep,
+        string suffix = Definition.DefaultSuffix)
     {
-        var newFile = FileObjectOperation<SingleFile>.Rename(this, new SingleFile(newName, Path.AbsolutePath),
-            creationMethod, suffix);
+        var newFile = FileObjectOperation<SingleFile>.Rename(this,
+            newFullPath,
+            fileConflictResolution,
+            suffix);
+        GetInfo();
         return newFile;
     }
+
+    public override string ToString() => Path.ToString();
 }

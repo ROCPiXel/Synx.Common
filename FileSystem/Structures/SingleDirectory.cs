@@ -1,21 +1,18 @@
-﻿using Synx.Common.Base;
-using Synx.Common.Enums;
-using Synx.Common.FileSystem.Attributes;
+﻿using Synx.Common.Enums;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Operations;
-using Synx.Common.Utils;
+using Synx.Common.FileSystem.Providers;
+using Synx.Common.FileSystem.Providers.FIle;
 
 namespace Synx.Common.FileSystem.Structures;
 
-public class SingleDirectory : IFileSysAct, IFileSysObj<SingleDirectory>
+public class SingleDirectory : IFileObject<SingleDirectory>
 {
     // 对象类型
-    public static FileObjectType ObjectType { get; } = FileObjectType.Directory;
+    public static FileObjectType FileObjectType { get; } = FileObjectType.Directory;
+    public static IFileSystem FileSystem { get; } = DirectoryFileSystem.Instance;
     
     // 基本信息
-    public string Name { get; set; } = string.Empty;
-    public string Extension { get; } = string.Empty;
-    public CPath ParentPath { get; set; } // 所在文件夹路径
     public CPath Path { get; set; } // 路径+文件名，完整路径
     public DirectoryInfo? DirectoryInfo { get; set; } // 本文件夹的信息
     public bool IsExists { get; set; } = false;
@@ -34,54 +31,21 @@ public class SingleDirectory : IFileSysAct, IFileSysObj<SingleDirectory>
     public DateTime? ModifyTime { get; set; }
     public DateTime? AccessTime { get; set; }
     
-    // 实现IFileSysAct
-    static bool IFileSysAct.GetExistsAction(string fullPath) => Directory.Exists(fullPath);
-    static void IFileSysAct.CreateAction(string fullPath) => Directory.CreateDirectory(fullPath);
-    static void IFileSysAct.DeleteAction(string fullPath) => Directory.Delete(fullPath);
-    static void IFileSysAct.MoveAction(string sourceFPath, string targetFPath) => Directory.Move(sourceFPath, targetFPath);
-    static string IFileSysAct.GenerateUniquePathAction(string fullPath, string suffix) => PathStringProc.GenerateDirectoryPath(fullPath, suffix);
-    
     // 构造函数
     public SingleDirectory()
         : this(string.Empty, string.Empty) { }
-    public SingleDirectory(string name, string parentPath)
-    {
-        FillInfo(name, parentPath);
-    }
+    public SingleDirectory(string name, string parentPath) { }
     public SingleDirectory(string name, CPath parentPath)
-        :this(name, parentPath.AbsolutePath) { }
+        :this(name, parentPath.Absolute) { }
     public SingleDirectory(string fullPath)
         :this(PathOperation.GetNameFromPath(fullPath), PathOperation.GetParentPath(fullPath)) { }
     public SingleDirectory(CPath fullCPath)
-        :this(fullCPath.AbsolutePath) { }
+        :this(fullCPath.Absolute) { }
     public SingleDirectory(DirectoryInfo directoryInfo)
         :this(directoryInfo.FullName) { }
         
-    
-    // 文件夹信息
-    /// <summary>
-    /// 填充文件夹的对应信息
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="parentPath"></param>
-    /// <returns></returns>
-    public void FillInfo(string name, string parentPath)
-    {
-        Name = name;
-        ParentPath = new(parentPath);
-        Path = new($"{parentPath}\\{name}");
-    }
+    // 以下：信息与属性相关
 
-    public void FillInfo(string name, CPath parentPath)
-    {
-        FillInfo(name, parentPath.AbsolutePath);
-    }
-
-    public void FillInfo(CPath fullCPath)
-    {
-        FillInfo(fullCPath.Name, fullCPath.ParentPath);
-    }
-        
     /// <summary>
     /// 获取本实例的实际信息
     /// </summary>
@@ -97,12 +61,12 @@ public class SingleDirectory : IFileSysAct, IFileSysObj<SingleDirectory>
     /// <returns></returns>
     public SingleDirectory GetDepth()
     {
-        DirectoryAttribute.GetDirectoryInfo(this);
-        Depth = DirectoryAttribute.GetDepth(DirectoryInfo);
+        if (DirectoryInfo is null) DirectoryAttribute.GetDirectoryInfo(this);
+        Depth = DirectoryAttribute.GetDepth(DirectoryInfo!);
         return this;
     }
         
-    // 内容
+    // 以下：内容相关
     public SingleDirectory GetContent()
     {
         DirectoryAttribute.GetContent(this);
@@ -117,14 +81,43 @@ public class SingleDirectory : IFileSysAct, IFileSysObj<SingleDirectory>
 
     public SingleDirectory Refresh()
     {
-        FillInfo(Name, ParentPath);
         GetInfo();
         return this;
     }
     
-    // 方法
-    public override string ToString()
+    // 以下：目录操作
+    /// <summary>
+    /// 创建本实例
+    /// </summary>
+    /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
+    /// <param name="suffix"></param>
+    public void Create(FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
     {
-        return Path.ToString();
+        FileObjectOperation<SingleDirectory>.Create(this, fileConflictResolution, suffix);
     }
+    
+    /// <summary>
+    /// 删除本实例
+    /// </summary>
+    /// <returns>是否删除成功</returns>
+    public bool Delete() => FileObjectOperation<SingleDirectory>.Delete(this);
+    
+    /// <summary>
+    /// 重命名本实例
+    /// </summary>
+    /// <param name="newFullPath">新的全路径</param>
+    /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
+    /// <param name="suffix">后缀</param>
+    /// <returns>重命名后的新对象</returns>
+    public SingleDirectory? Rename(string newFullPath,
+        FileConflictResolution fileConflictResolution = FileConflictResolution.Keep,
+        string suffix = Definition.DefaultSuffix)
+    {
+        var newDirectory = FileObjectOperation<SingleDirectory>.Rename(this, newFullPath, fileConflictResolution, suffix); 
+        GetInfo();
+        return newDirectory;
+    }
+
+    // 方法
+    public override string ToString() => Path.ToString();
 }

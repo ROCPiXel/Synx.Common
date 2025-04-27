@@ -1,4 +1,6 @@
-﻿namespace Synx.Common.Utils;
+﻿using Synx.Common.FileSystem;
+
+namespace Synx.Common.Utils;
 
 public static class SpaceUnitExchange
 {
