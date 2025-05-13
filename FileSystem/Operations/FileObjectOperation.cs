@@ -66,7 +66,7 @@ public static class FileObjectOperation<TFileSysObj>
             // 创建实例并更新路径相关信息
             newFileSysObj = new TFileSysObj()
             {
-                Path = new CPath(fullPath)
+                Path = new CPath(finalPath) //???
             };
             newFileSysObj.Path.Sync();
         }
