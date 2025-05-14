@@ -36,8 +36,8 @@ public class ProgressHelper
         float writerSpeed = (writerPointer - _lastWriterPointers) / (float)(1024 * 1024) * _intervalsPerSecond;
 
         Console.WriteLine($"#{_count} at {_count * Interval}ms: " +
-                          $"RP: {readerPointer} Progress: {(float)readerPointer / FileSize} Speed: {readerSpeed}MiB/s | " +
-                          $"WP: {writerPointer} Progress: {(float)writerPointer / FileSize} Speed: {writerSpeed}MiB/s");
+                          $"RP: {readerPointer} Progress: {(float)readerPointer / FileSize} {readerSpeed}MiB/s | " +
+                          $"WP: {writerPointer} Progress: {(float)writerPointer / FileSize} {writerSpeed}MiB/s");
 
         _lastReaderPointers = readerPointer;
         _lastWriterPointers = writerPointer;
