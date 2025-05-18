@@ -8,16 +8,16 @@ namespace Synx.Common.Collections.ProducerConsumer;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class ChannelDispatcher<T> : IDisposable
-    where T : IDisposable
+    where T : IDisposable, IReusable
 {
     private bool _isDisposed = false;
-    private readonly Channel<T> _channel;
+    private readonly Channel<T> _originChannel;
     private readonly ConcurrentQueue<ChannelWriter<T>> _writers = new();
     private readonly Task _dispatchTask;
 
-    public ChannelDispatcher(Channel<T> channel)
+    public ChannelDispatcher(Channel<T> originChannel)
     {
-        this._channel = channel;
+        this._originChannel = originChannel;
         _dispatchTask = Task.Run(DispatchAsync);
     }
 
@@ -30,13 +30,18 @@ public class ChannelDispatcher<T> : IDisposable
     
     public async ValueTask WriteToChannelAsync(T data)
     {
-        await _channel.Writer.WriteAsync(data);
+        await _originChannel.Writer.WriteAsync(data);
     }
 
     public async Task DispatchAsync()
     {
-        await foreach (var item in _channel.Reader.ReadAllAsync())
+        await foreach (var item in _originChannel.Reader.ReadAllAsync())
         {
+            for (int i = 0; i < 2; i++)
+            {
+                item.AddReference();
+            }
+            // item.AddReference();
             foreach(var writer in _writers)
             {
                 await writer.WriteAsync(item);
@@ -56,7 +61,7 @@ public class ChannelDispatcher<T> : IDisposable
         if (_isDisposed) return;
         _isDisposed = true;
         
-        _channel.Writer.Complete();
+        _originChannel.Writer.Complete();
         _dispatchTask?.Wait();
         GC.SuppressFinalize(this);
     }
