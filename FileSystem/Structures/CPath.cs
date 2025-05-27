@@ -5,7 +5,7 @@ using Synx.Common.FileSystem.Operations;
 namespace Synx.Common.FileSystem.Structures;
 
 /// <summary>
-/// CPath - CompositePath: struct
+/// CPath - CompositePath
 /// 复合路径，含有绝对与相对路径
 /// </summary>
 ///  TODO: IEnumerable，实现foreach

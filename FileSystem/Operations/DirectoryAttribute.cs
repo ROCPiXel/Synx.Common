@@ -1,4 +1,5 @@
-﻿using Synx.Common.FileSystem.Structures;
+﻿using Synx.Common.Enums;
+using Synx.Common.FileSystem.Structures;
 
 namespace Synx.Common.FileSystem.Operations;
 
@@ -75,15 +76,22 @@ public static class DirectoryAttribute
         if (sd.DirectoryInfo is null) GetDirectoryInfo(sd);
         try
         {
-            if (sd.DirectoryInfo == null)
-            {
-                GetDirectoryInfo(sd); // 当递归传入空目录，引发异常返回
-            }
+            // 当递归传入空目录，引发异常返回
+            if (sd.DirectoryInfo == null) GetDirectoryInfo(sd);
+            
+            // 文件夹
             DirectoryInfo[] directoriesInfo = sd.DirectoryInfo!.GetDirectories();
-            //sd.ChildDirectoriesInfo = directoriesInfo;
             foreach (DirectoryInfo di in directoriesInfo)
             {
                 sd.SubDirectory.Add(new SingleDirectory(di));
+                // sd.ChildCPathDictionary.Add(new CPath(di.FullName));
+            }
+            
+            // 文件
+            FileInfo[] fileInfos = sd.DirectoryInfo!.GetFiles();
+            foreach (FileInfo fi in fileInfos)
+            {
+                sd.SubFile.Add(new SingleFile(fi.FullName));
             }
         }
         catch (Exception)
@@ -92,29 +100,103 @@ public static class DirectoryAttribute
         }
         return sd;
     }
+    
+    // TODO: 准备删除
+    // public static SingleDirectory Traverse(SingleDirectory sd)
+    // {
+    //     if (sd.DirectoryInfo is null) GetDirectoryInfo(sd); // 预处理，并添加目录信息
+    //     try
+    //     {
+    //         // 遍历每个子目录
+    //         foreach (DirectoryInfo di in sd.DirectoryInfo!.GetDirectories())
+    //         {
+    //             SingleDirectory dir = new(di);
+    //             sd.SubDirectory.Add(Traverse(dir)); // 递归
+    //         }
+    //     }
+    //     catch (Exception)
+    //     {
+    //         return new SingleDirectory(); // 空目录
+    //     }
+    //     return sd; // 返回当前目录
+    // }
 
     /// <summary>
     /// Traverse: func
-    /// 遍历整个文件夹（所有层级）
+    /// 遍历整个文件夹（指定层级）
     /// </summary>
-    /// <param name="sd">SingleDirectory</param>
+    /// <param name="singleDirectory"></param>
+    /// <param name="targetDepth"></param>
+    /// <param name="recursionDepth"></param>
     /// <returns></returns>
-    public static SingleDirectory Traverse(SingleDirectory sd)
+    public static SingleDirectory Traverse(this SingleDirectory singleDirectory, 
+        int? targetDepth = Definition.DirectoryScanningMaxDepth, int? recursionDepth = 0)
     {
-        if (sd.DirectoryInfo is null) GetDirectoryInfo(sd); // 预处理，并添加目录信息
+        int currentDepth = recursionDepth ?? 0;
+        if (singleDirectory.DirectoryInfo is null) GetDirectoryInfo(singleDirectory);
+        
+        foreach (FileInfo fi in singleDirectory.DirectoryInfo!.GetFiles())
+        {
+            singleDirectory.AddObjectToList(new CPath(fi.FullName), FileObjectType.File);
+        }
+
+        // 基本情况1：到达目标
+        if (targetDepth == currentDepth) return singleDirectory;
+
         try
         {
-            // 遍历每个子目录
-            foreach (DirectoryInfo di in sd.DirectoryInfo!.GetDirectories())
+            foreach (DirectoryInfo di in singleDirectory.DirectoryInfo!.GetDirectories())
             {
+                // currentDepth++; //有点深奥
                 SingleDirectory dir = new(di);
-                sd.SubDirectory.Add(Traverse(dir)); // 递归
+                singleDirectory.AddObjectToList(new CPath(di.FullName), FileObjectType.Directory);
+                singleDirectory.SubDirectory.Add(Traverse(dir, targetDepth, currentDepth++));
             }
         }
         catch (Exception)
         {
-            return new SingleDirectory(); // 空目录
+            // 基本情况2：到达底层
+            return singleDirectory;
         }
-        return sd; // 返回当前目录
+        return singleDirectory;
+    }
+
+    /// <summary>
+    /// ExpandChild: func
+    /// 根据指定项<see cref="SingleDirectory.ChildCPathDictionary"/>展开至平面字典中
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="targetDepth"></param>
+    /// <param name="recursionDepth"></param>
+    /// <returns></returns>
+    public static Dictionary<CPath, FileObjectType> ExpandChild(this SingleDirectory source,
+        int? targetDepth = Definition.DirectoryScanningMaxDepth, int? recursionDepth = 0)
+    {
+        Dictionary<CPath, FileObjectType> dict = new();
+        int currentDepth = recursionDepth ?? 0;
+        
+        if(currentDepth == targetDepth) return dict;
+
+        try
+        {
+            foreach (var p in source.ChildCPathDictionary)
+            {
+                dict.Add(p.Key, p.Value);
+            }
+
+            foreach (var d in source.SubDirectory)
+            {
+                var c = ExpandChild(d, targetDepth, currentDepth++);
+                foreach (var p in c)
+                {
+                    dict.Add(p.Key, p.Value);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            return dict;
+        }
+        return dict;
     }
 }

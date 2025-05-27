@@ -7,8 +7,7 @@ namespace Synx.Common.Collections.ProducerConsumer;
 /// Channel的复用器
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ChannelDispatcher<T> : IDisposable
-    where T : IDisposable, IReusable
+public class ChannelDispatcher<T> : IDisposable, IDispatcher<T> where T : class, IDisposable, IReusable
 {
     private bool _isDisposed = false;
     private readonly Channel<T> _originChannel;
@@ -37,11 +36,10 @@ public class ChannelDispatcher<T> : IDisposable
     {
         await foreach (var item in _originChannel.Reader.ReadAllAsync())
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < _writers.Count; i++)
             {
                 item.AddReference();
             }
-            // item.AddReference();
             foreach(var writer in _writers)
             {
                 await writer.WriteAsync(item);

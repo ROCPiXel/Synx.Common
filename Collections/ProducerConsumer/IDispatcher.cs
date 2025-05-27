@@ -1,6 +1,14 @@
-﻿namespace Synx.Common.Collections.ProducerConsumer;
+﻿using System.Threading.Channels;
 
-public interface IDispatcher
+namespace Synx.Common.Collections.ProducerConsumer;
+
+public interface IDispatcher<T> where T : class, IDisposable, IReusable
 {
+    ChannelReader<T> RegisterCustomer();
     
+    ValueTask WriteToChannelAsync(T data);
+    
+    Task DispatchAsync();
+    
+    void Dispose();
 }
