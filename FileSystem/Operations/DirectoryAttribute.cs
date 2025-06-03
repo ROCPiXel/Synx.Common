@@ -100,26 +100,6 @@ public static class DirectoryAttribute
         }
         return sd;
     }
-    
-    // TODO: 准备删除
-    // public static SingleDirectory Traverse(SingleDirectory sd)
-    // {
-    //     if (sd.DirectoryInfo is null) GetDirectoryInfo(sd); // 预处理，并添加目录信息
-    //     try
-    //     {
-    //         // 遍历每个子目录
-    //         foreach (DirectoryInfo di in sd.DirectoryInfo!.GetDirectories())
-    //         {
-    //             SingleDirectory dir = new(di);
-    //             sd.SubDirectory.Add(Traverse(dir)); // 递归
-    //         }
-    //     }
-    //     catch (Exception)
-    //     {
-    //         return new SingleDirectory(); // 空目录
-    //     }
-    //     return sd; // 返回当前目录
-    // }
 
     /// <summary>
     /// Traverse: func

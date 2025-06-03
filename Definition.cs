@@ -6,17 +6,19 @@
 /// </summary>
 public static class Definition
 {
-    // 一些常用存储容量关于Byte关系的常量，KiB = 1024 Bytes, KB = 1000 Bytes
+    /*
+     * 一些常用存储容量关于Byte关系的常量，KiB = 1024 Bytes, KB = 1000 Bytes
+     */
     public const int Byte = 1;
 
-    public const long KiB = 1024 * Byte;
-    public const long MiB = 1024 * KiB;
+    public const int KiB = 1024 * Byte;
+    public const int MiB = 1024 * KiB;
     public const long GiB = 1024 * MiB;
     public const long TiB = 1024 * GiB;
     public const long PiB = 1024 * GiB;
 
-    public const long Kb = 1000 * Byte;
-    public const long Mb = 1000 * Kb;
+    public const int Kb = 1000 * Byte;
+    public const int Mb = 1000 * Kb;
     public const long Gb = 1000 * Mb;
     public const long Tb = 1000 * Gb;
     public const long Pb = 1000 * Gb;
@@ -25,10 +27,12 @@ public static class Definition
     public const string LoggerFolder = @"\__Log\";
     public const string FileOpTestFolder = "\\__FileOpTest\\";
 
-    // 以下常量定义来源于TimeSpan(System.Runtime)
-    // 用于描述对应时间段内的Tick数, 1 Tick含有 100 Nanosecond
-    // Tick/Microsecond = 10, Tick/Second = 10^7;
-    // Second > (x1000) Millisecond > (x1000) MicroSecond > (x1000) Nanosecond
+    /*
+     * 以下常量定义来源于TimeSpan(System.Runtime)
+     * 用于描述对应时间段内的Tick数, 1 Tick含有 100 Nanosecond
+     * Tick/Microsecond = 10, Tick/Second = 10^7;
+     * Second > (x1000) Millisecond > (x1000) MicroSecond > (x1000) Nanosecond
+     */
 
     /// <summary>每个Tick所含有的ns纳秒</summary>
     public const long NanosecondsPerTick = 100; 
@@ -62,6 +66,13 @@ public static class Definition
     /// <summary>最大扫描深度</summary>
     public const int DirectoryScanningMaxDepth = 1024;
     public const int FileNameMaxLength = int.MaxValue;
+
+    /// <summary>默认的单次IO缓冲区大小</summary>
+    public const int DefaultIoBufferSize = 8 * KiB;
+    /// <summary>默认的单个块缓冲区大小</summary>
+    public const long DefaultBlockBufferSize = 128 * KiB;
+    /// <summary>默认的总缓冲区大小</summary>
+    public const long DefaultBufferSize = 128 * MiB;
     
 #if WINDOWS
     public const char LocalDirectorySeparatorChar = '\\';

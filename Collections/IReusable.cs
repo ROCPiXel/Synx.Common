@@ -1,4 +1,4 @@
-﻿namespace Synx.Common.Collections.ProducerConsumer;
+﻿namespace Synx.Common.Collections;
 
 public interface IReusable
 {

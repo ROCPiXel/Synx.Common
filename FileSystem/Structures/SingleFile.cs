@@ -19,8 +19,7 @@ public class SingleFile : IFileObject<SingleFile>
     // 以下为可空属性，当实例不存在为空
     public FileInfo? FileInfo { get; set; } // FileInfo类
     public bool? IsReadOnly { get; set; }
-    public long? Length { get; set; } // 字节长度
-    public long? DiskSpace { get; set; }
+    public long? Size { get; set; } // 字节长度
     public FileFormat? Type { get; set; } // 类型
     public DateTime? CreateTime { get; set; }
     public DateTime? ModifyTime { get; set; }
@@ -53,7 +52,7 @@ public class SingleFile : IFileObject<SingleFile>
     /// 获取真实的文件信息
     /// </summary>
     /// <returns></returns>
-    public SingleFile GetInfo() => FileAttribute.GetFileInfo(this);
+    public SingleFile GetInfo() => this.GetFileInfo();
 
     /// <summary>
     /// 刷新并重新获取信息

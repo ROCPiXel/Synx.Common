@@ -11,7 +11,7 @@ public static class FileAttribute
     /// <param name="singleFile"></param>
     /// <returns></returns>
     /// <exception cref="FileNotFoundException"></exception>
-    public static SingleFile GetFileInfo(SingleFile singleFile)
+    public static SingleFile GetFileInfo(this SingleFile singleFile)
     {
         ArgumentException.ThrowIfNullOrEmpty(singleFile.Path.Absolute, nameof(singleFile));
         if (!File.Exists(singleFile.Path.Absolute))
@@ -22,7 +22,7 @@ public static class FileAttribute
         FileInfo fileInfo = new(singleFile.Path.Absolute);
         singleFile.FileInfo = fileInfo;
 
-        singleFile.Length = fileInfo.Length;
+        singleFile.Size = fileInfo.Length;
         singleFile.IsReadOnly = fileInfo.IsReadOnly;
 
         singleFile.CreateTime = fileInfo.CreationTimeUtc; // 创建时间

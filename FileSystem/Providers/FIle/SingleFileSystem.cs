@@ -16,7 +16,7 @@ public class SingleFileSystem : FileSystemBase<SingleFileSystem>
                        mode,
                        access ?? FileAccess.ReadWrite,
                        share ?? FileShare.None,
-                       bufferSize ?? 4096, // TODO: Make this configurable
+                       bufferSize ?? Definition.DefaultIoBufferSize,
                        options ?? FileOptions.None);
 
     public override bool Exists(string fullPath) => File.Exists(fullPath);
