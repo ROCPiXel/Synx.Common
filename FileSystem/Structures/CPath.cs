@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using Synx.Common.Enums;
+﻿using Synx.Common.Enums;
 using Synx.Common.FileSystem.Operations;
 
 namespace Synx.Common.FileSystem.Structures;
 
 /// <summary>
-/// CPath - CompositePath: struct
+/// CPath - CompositePath
 /// 复合路径，含有绝对与相对路径
 /// </summary>
-///  TODO: IEnumerable，实现foreach
-public struct CPath : IEnumerable<CPath>
+public record struct CPath
 {
     private string? _absolute;
     private string? _relative;
@@ -218,14 +216,4 @@ public struct CPath : IEnumerable<CPath>
 
     /// <summary>获取绝对路径</summary>
     public override string ToString() => _absolute ?? string.Empty;
-    
-    public IEnumerator<CPath> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
-    
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
 }
