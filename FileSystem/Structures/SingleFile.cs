@@ -72,7 +72,7 @@ public class SingleFile : IFileObject<SingleFile>
 
     public double GetLength()
     {
-        return FileAttribute.GetLength(this);
+        return FilePropertyHelper.GetLength(this);
     }
 
     /// <summary>

@@ -3,7 +3,7 @@ using Synx.Common.FileSystem.Structures;
 
 namespace Synx.Common.FileSystem.Operations;
 
-public static class DirectoryAttribute
+public static class DirectoryPropertyHelper
 {
     /// <summary>
     /// GetDirectoryInfo - func
@@ -152,6 +152,8 @@ public static class DirectoryAttribute
     public static Dictionary<CPath, FileObjectType> ExpandChild(this SingleDirectory source,
         int? targetDepth = Definition.DirectoryScanningMaxDepth, int? recursionDepth = 0)
     {
+        ArgumentNullException.ThrowIfNull(source.ChildCPathDictionary, nameof(source.ChildCPathDictionary));
+
         Dictionary<CPath, FileObjectType> dict = new();
         int currentDepth = recursionDepth ?? 0;
         

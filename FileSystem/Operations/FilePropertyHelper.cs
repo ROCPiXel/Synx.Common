@@ -2,7 +2,7 @@
 
 namespace Synx.Common.FileSystem.Operations;
 
-public static class FileAttribute
+public static class FilePropertyHelper
 {
     /// <summary>
     /// GetFileInfo - func

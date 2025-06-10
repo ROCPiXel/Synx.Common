@@ -68,7 +68,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <returns></returns>
     public SingleDirectory GetInfo()
     {
-        return DirectoryAttribute.GetDirectoryInfo(this);
+        return DirectoryPropertyHelper.GetDirectoryInfo(this);
     }
         
     /// <summary>
@@ -77,8 +77,8 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <returns></returns>
     public SingleDirectory GetDepth()
     {
-        if (DirectoryInfo is null) DirectoryAttribute.GetDirectoryInfo(this);
-        Depth = DirectoryAttribute.GetDepth(DirectoryInfo!);
+        if (DirectoryInfo is null) DirectoryPropertyHelper.GetDirectoryInfo(this);
+        Depth = DirectoryPropertyHelper.GetDepth(DirectoryInfo!);
         return this;
     }
         
@@ -89,7 +89,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <returns></returns>
     public SingleDirectory GetContent()
     {
-        DirectoryAttribute.GetContent(this);
+        DirectoryPropertyHelper.GetContent(this);
         return this;
     }
         
@@ -99,7 +99,7 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <returns></returns>
     public SingleDirectory Traverse()
     {
-        DirectoryAttribute.Traverse(this);
+        DirectoryPropertyHelper.Traverse(this);
         return this;
     }
 
