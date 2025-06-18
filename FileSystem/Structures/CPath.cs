@@ -1,5 +1,5 @@
 ﻿using Synx.Common.Enums;
-using Synx.Common.FileSystem.Operations;
+using Synx.Common.FileSystem.Helpers;
 
 namespace Synx.Common.FileSystem.Structures;
 

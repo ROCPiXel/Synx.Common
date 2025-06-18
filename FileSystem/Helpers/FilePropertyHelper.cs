@@ -1,6 +1,6 @@
 ﻿using Synx.Common.FileSystem.Structures;
 
-namespace Synx.Common.FileSystem.Operations;
+namespace Synx.Common.FileSystem.Helpers;
 
 public static class FilePropertyHelper
 {

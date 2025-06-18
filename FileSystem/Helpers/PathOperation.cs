@@ -1,8 +1,8 @@
-﻿using Synx.Common.FileSystem.Interfaces;
+﻿using System.Text.RegularExpressions;
+using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Structures;
-using System.Text.RegularExpressions;
 
-namespace Synx.Common.FileSystem.Operations;
+namespace Synx.Common.FileSystem.Helpers;
 
 /// <summary>
 /// 路径的一些常规操作
