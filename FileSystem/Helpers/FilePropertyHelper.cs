@@ -19,6 +19,7 @@ public static class FilePropertyHelper
             throw new FileNotFoundException();
         }
 
+        singleFile.IsExists = true;
         FileInfo fileInfo = new(singleFile.Path.Absolute);
         singleFile.FileInfo = fileInfo;
 

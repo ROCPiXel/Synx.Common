@@ -11,7 +11,7 @@ namespace Synx.Common.FileSystem.Helpers;
 /// </summary>
 /// <seealso href="https://learn.microsoft.com/zh-cn/dotnet/api/system.io.path?view=net-8.0">System.IO.Path：Path类与基本方法</seealso>
 /// <seealso href="https://learn.microsoft.com/zh-cn/dotnet/fundamentals/code-analysis/quality-rules/ca1847">CA1847：优先使用char</seealso>
-public static class PathOperation
+public static class PathHelper
 {
     /// <summary>
     /// （根据顺序）拼接路径
@@ -105,13 +105,13 @@ public static class PathOperation
         var partsLength = pathParts.Length;
         if (partsLength == 1) // 是根目录
         {
-            throw new ArgumentException("[ERR]根目录没有父路径");
+            throw new ArgumentException("[ERR] PathHelper: 根目录没有父路径");
         }
         if (pathParts[^1] == string.Empty) // 末尾是斜杠
         {
             if(partsLength == 2) // （且）是根目录
             {
-                throw new ArgumentException("[ERR]根目录没有父路径"); 
+                throw new ArgumentException("[ERR] PathHelper: 根目录没有父路径"); 
             }
             return path[..^(pathParts[^2].Length + 2)]; // 处理掉末尾斜杠+结果末尾的斜杠
         }

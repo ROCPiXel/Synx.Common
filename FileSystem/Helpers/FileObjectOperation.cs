@@ -28,7 +28,6 @@ public static class FileObjectOperation<TFileSysObj>
         ArgumentNullException.ThrowIfNull(fullPath);
         // 目标路径与唯一的新路径
         string finalPath = fullPath; 
-        string uniqueFullPath = PathOperation.GenerateUniquePath<TFileSysObj>(fullPath, suffix);
         TFileSysObj newFileSysObj;
 
         // 基础情况：存在且保持，两者冲突
@@ -41,7 +40,7 @@ public static class FileObjectOperation<TFileSysObj>
         {
             // 选择新建且存在：生成唯一路径
             case FileConflictResolution.New:
-                finalPath = PathOperation.GenerateUniquePath<TFileSysObj>(fullPath, suffix);
+                finalPath = PathHelper.GenerateUniquePath<TFileSysObj>(fullPath, suffix);
                 break;
 
             // 选择覆盖且存在：直接覆盖文件
@@ -51,7 +50,8 @@ public static class FileObjectOperation<TFileSysObj>
                 TFileSysObj.FileSystem.Delete(finalPath);
                 break;
         }
-
+        
+        Directory.CreateDirectory(PathHelper.GetParentPath(finalPath));
         try
         {
             TFileSysObj.FileSystem.Create(finalPath).Close();
@@ -59,7 +59,7 @@ public static class FileObjectOperation<TFileSysObj>
         catch (Exception ex)
         {
             Debug.WriteLine($"[ERR] Failed to create FileSysObj: {ex}");
-            throw new Exception($"Failed to create FileObject: {ex}");
+            throw;
         }
         finally
         {
@@ -100,6 +100,7 @@ public static class FileObjectOperation<TFileSysObj>
     /// <returns></returns>
     public static bool Delete(string fullPath)
     {
+        ArgumentNullException.ThrowIfNull(fullPath);
         if (!TFileSysObj.FileSystem.Exists(fullPath)) return false;
         
         try

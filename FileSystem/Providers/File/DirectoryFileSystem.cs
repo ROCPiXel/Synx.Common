@@ -1,4 +1,4 @@
-﻿namespace Synx.Common.FileSystem.Providers.FIle;
+﻿namespace Synx.Common.FileSystem.Providers.File;
 
 public class DirectoryFileSystem : FileSystemBase<DirectoryFileSystem>
 {

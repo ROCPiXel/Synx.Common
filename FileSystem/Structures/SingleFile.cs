@@ -2,7 +2,7 @@
 using Synx.Common.FileSystem.Helpers;
 using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Providers;
-using Synx.Common.FileSystem.Providers.FIle;
+using Synx.Common.FileSystem.Providers.File;
 
 namespace Synx.Common.FileSystem.Structures;
 

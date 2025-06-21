@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Synx.Common.Utils
+﻿namespace Synx.Common.Utils
 {
     public static class ObjectHelper
     {
@@ -12,11 +6,11 @@ namespace Synx.Common.Utils
         /// 交换两个对象
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="A"></param>
-        /// <param name="B"></param>
-        public static void Change<T>(ref T A, ref T B)
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        public static void Change<T>(ref T a, ref T b)
         {
-            (A, B) = (B, A);
+            (a, b) = (b, a);
         }
     }
 }
