@@ -1,5 +1,5 @@
 ﻿using Synx.Common.Enums;
-using Synx.Common.FileSystem.Operations;
+using Synx.Common.FileSystem.Helpers;
 
 namespace Synx.Common.FileSystem.Structures;
 
@@ -23,10 +23,10 @@ public record struct CPath
     {
         string? primaryPath = _absolute ?? _relative;
         ArgumentException.ThrowIfNullOrEmpty(primaryPath, nameof(primaryPath));
-        _parent = PathOperation.GetParentPath(primaryPath);
-        _name = PathOperation.GetNameFromPath(primaryPath);
-        _extension = PathOperation.GetExtension(_name);
-        _realName = PathOperation.GetRealName(_name);
+        _parent = PathHelper.GetParentPath(primaryPath);
+        _name = PathHelper.GetNameFromPath(primaryPath);
+        _extension = PathHelper.GetExtension(_name);
+        _realName = PathHelper.GetRealName(_name);
     }
     
     /// <summary>
@@ -40,7 +40,7 @@ public record struct CPath
         {
             if (_absolute != null) return _absolute;
             ArgumentException.ThrowIfNullOrEmpty(_relative, nameof(_relative));
-            return _absolute = PathOperation.GetAbsolutePath(_relative, _base);
+            return _absolute = PathHelper.GetAbsolutePath(_relative, _base);
         }
         set => _absolute = value;
     }
@@ -57,7 +57,7 @@ public record struct CPath
             if (_relative != null) return _relative;
             ArgumentException.ThrowIfNullOrEmpty(_absolute, nameof(_absolute));
             _base ??= Path.GetPathRoot(_absolute) ?? AppDomain.CurrentDomain.BaseDirectory;
-            return _relative = PathOperation.GetRelativePath(_absolute, _base);
+            return _relative = PathHelper.GetRelativePath(_absolute, _base);
         }
         set => _relative = value;
     }
@@ -73,9 +73,9 @@ public record struct CPath
         {
             if (_base != null) return _base;
             if(_relative == null || _absolute == null) 
-                return _base = PathOperation.GetPathRoot(_absolute ?? _relative ?? null)
+                return _base = PathHelper.GetPathRoot(_absolute ?? _relative ?? null)
                     ?? AppDomain.CurrentDomain.BaseDirectory;
-            return _base = PathOperation.GetAbsolutePath(_relative, _absolute);
+            return _base = PathHelper.GetAbsolutePath(_relative, _absolute);
         }
         set => _base = value;
     }
@@ -164,7 +164,7 @@ public record struct CPath
     /// <param name="basePath"></param>
     public CPath(string absolutePath, string? basePath = null)
     {
-        Absolute = PathOperation.GetAbsolutePath(absolutePath.StandardizePath(), basePath);
+        Absolute = PathHelper.GetAbsolutePath(absolutePath.StandardizePath(), basePath);
         _base = basePath ?? null;
     }
 
@@ -190,7 +190,7 @@ public record struct CPath
     {
         _base = basePath 
             ?? _base 
-            ?? PathOperation.GetPathRoot(_absolute ?? _relative)
+            ?? PathHelper.GetPathRoot(_absolute ?? _relative)
             ?? AppDomain.CurrentDomain.BaseDirectory;
         switch (trigger)
         {

@@ -1,12 +1,12 @@
 ﻿using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Structures;
 
-namespace Synx.Common.FileSystem.Operations;
+namespace Synx.Common.FileSystem.Helpers;
 
 /// <summary>
 /// CPath的扩展方法
 /// <seealso cref="CPath">对象：CPath</seealso>
-/// <seealso cref="PathOperation">方法：PathOperation</seealso>
+/// <seealso cref="PathHelper">方法：PathHelper</seealso>
 /// </summary>
 public static class CPathExtension
 {
@@ -19,7 +19,7 @@ public static class CPathExtension
 
     /// <summary>
     /// 标准化绝对路径
-    /// <see cref="PathOperation.StandardizePath(string)"/>"/>
+    /// <see cref="PathHelper.StandardizePath(string)"/>"/>
     /// </summary>
     /// <param name="cPath"></param>
     /// <returns></returns>
@@ -27,17 +27,17 @@ public static class CPathExtension
 
     public static string GetAbsolutePath(this CPath cPath, string? basePath = null)
     {
-        return PathOperation.GetAbsolutePath(cPath.Relative, basePath);
+        return PathHelper.GetAbsolutePath(cPath.Relative, basePath);
     }
 
     public static CPath GetAbsolutePath(this ref CPath cPath, string? basePath = null)
     {
-        cPath.Absolute = PathOperation.GetAbsolutePath(cPath.Relative, basePath);
+        cPath.Absolute = PathHelper.GetAbsolutePath(cPath.Relative, basePath);
         return cPath;
     }
     
     public static string GetRelativePath(CPath cPath, string? basePath = null) =>
-        PathOperation.GetRelativePath(cPath.Relative, basePath); 
+        PathHelper.GetRelativePath(cPath.Relative, basePath); 
     
     /// <summary>
     /// 生成 对应的uri（不更新）
@@ -46,9 +46,9 @@ public static class CPathExtension
     /// <returns>绝对路径的Uri</returns>
     public static Uri GetUri(this CPath cPath) => new(cPath.Absolute);
     
-    public static string GetNameFromPath(this CPath cPath) => PathOperation.GetNameFromPath(cPath.Absolute);
+    public static string GetNameFromPath(this CPath cPath) => PathHelper.GetNameFromPath(cPath.Absolute);
     
-    public static string GetParentPath(this CPath cPath) => PathOperation.GetParentPath(cPath.Absolute);
+    public static string GetParentPath(this CPath cPath) => PathHelper.GetParentPath(cPath.Absolute);
 
     public static T CreateFileObject<T>(this CPath cPath) 
         where T : IFileObject<T>, new()

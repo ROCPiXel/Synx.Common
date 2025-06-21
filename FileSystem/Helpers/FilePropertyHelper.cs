@@ -1,6 +1,6 @@
 ﻿using Synx.Common.FileSystem.Structures;
 
-namespace Synx.Common.FileSystem.Operations;
+namespace Synx.Common.FileSystem.Helpers;
 
 public static class FilePropertyHelper
 {
@@ -19,6 +19,7 @@ public static class FilePropertyHelper
             throw new FileNotFoundException();
         }
 
+        singleFile.IsExists = true;
         FileInfo fileInfo = new(singleFile.Path.Absolute);
         singleFile.FileInfo = fileInfo;
 

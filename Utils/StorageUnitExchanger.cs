@@ -1,9 +1,8 @@
-﻿using Synx.Common.FileSystem;
+﻿namespace Synx.Common.Utils;
 
-namespace Synx.Common.Utils;
-
-public static class SpaceUnitExchange
+public static class StorageUnitExchanger
 {
+    // ReSharper disable InconsistentNaming
     /// <summary>
     /// 存储容量单位与数值对应表
     /// </summary>
@@ -57,7 +56,7 @@ public static class SpaceUnitExchange
     }
     
     /// <summary>
-    /// GetSpaceAuto: func
+    /// ChangeAuto: func
     /// 自动获取合适的存储容量单位字符串
     /// </summary>
     /// <param name="space">值</param>
@@ -65,12 +64,24 @@ public static class SpaceUnitExchange
     /// <param name="unitBase">若切换为1000请设置新的对应表</param>
     /// <param name="format">详见string.Format()</param>
     /// <returns></returns>
-    public static string GetSpaceAuto(long space, long from = 1, int unitBase = 1024, string format = "F")
+    public static string ChangeAuto(long space, long from = 1, int unitBase = 1024, string format = "F")
     {
         if (space == 0) return "0B";
         long spaceByte = space * (from);
         int type = (int)Math.Floor(Math.Log(spaceByte, unitBase));
         double autoSpace = (double)spaceByte / StorageBytes[type];
         return autoSpace.ToString(format).TrimEnd('0').TrimEnd('.') + StorageUnits[type];
+    }
+    // ReSharper restore InconsistentNaming
+    
+    /// <summary>
+    /// 对齐
+    /// </summary>
+    /// <param name="size">源大小</param>
+    /// <param name="baseSize">要对齐的基数</param>
+    /// <returns></returns>
+    public static long Alignment(double size, int baseSize = Definition.MiB)
+    {
+        return baseSize * (long)Math.Ceiling(size / baseSize);
     }
 }

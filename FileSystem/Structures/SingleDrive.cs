@@ -37,10 +37,10 @@ public class SingleDrive
     /// </summary>
     public void CalculateSpace()
     {
-        SpaceGiB = SpaceUnitExchange.GetGiBSpace(Space);
+        SpaceGiB = StorageUnitExchanger.GetGiBSpace(Space);
         Used = Space - Free;
-        UsedGiB = SpaceUnitExchange.GetGiBSpace(Used);
-        FreeGiB = SpaceUnitExchange.GetGiBSpace(Free);
+        UsedGiB = StorageUnitExchanger.GetGiBSpace(Used);
+        FreeGiB = StorageUnitExchanger.GetGiBSpace(Free);
         Usage = (double)Used / Space;
     }
 

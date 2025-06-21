@@ -42,6 +42,11 @@ public static class Definition
     /// 请确保您需要的量是以bit为单位的
     /// </summary>
     public const int Mib = 1024 * Kib;
+    
+    /// <summary>
+    /// 文件系统的块大小，通常为4KiB
+    /// </summary>
+    public const int FileSystemBlockSize = 4 * KiB;
     // ReSharper restore InconsistentNaming
 
     public const string DefaultSuffix = "_new";

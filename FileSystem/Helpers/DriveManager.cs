@@ -4,7 +4,7 @@ using Synx.Common.FileSystem.Interfaces;
 using Synx.Common.FileSystem.Providers.Drive;
 using Synx.Common.FileSystem.Structures;
 
-namespace Synx.Common.FileSystem.Operations;
+namespace Synx.Common.FileSystem.Helpers;
 
 /// <summary>
 /// <see cref="SingleDrive"/>的单例管理器

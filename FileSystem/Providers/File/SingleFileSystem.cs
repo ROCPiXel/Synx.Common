@@ -1,6 +1,6 @@
-﻿using Synx.Common.FileSystem.Operations;
+﻿using Synx.Common.FileSystem.Helpers;
 
-namespace Synx.Common.FileSystem.Providers.FIle;
+namespace Synx.Common.FileSystem.Providers.File;
 
 public class SingleFileSystem : FileSystemBase<SingleFileSystem>
 {
@@ -19,16 +19,16 @@ public class SingleFileSystem : FileSystemBase<SingleFileSystem>
                        bufferSize ?? Definition.DefaultIoBufferSize,
                        options ?? FileOptions.None);
 
-    public override bool Exists(string fullPath) => File.Exists(fullPath);
+    public override bool Exists(string fullPath) => System.IO.File.Exists(fullPath);
     
     public override FileStream Create(string fullPath) 
-        => File.Create(fullPath);
+        => System.IO.File.Create(fullPath);
     
     public override void Delete(string fullPath) 
-        => File.Delete(fullPath);
+        => System.IO.File.Delete(fullPath);
     
     public override void Move(string sourceFPath, string targetFPath) 
-        =>  File.Move(sourceFPath, targetFPath);
+        =>  System.IO.File.Move(sourceFPath, targetFPath);
     public override string GetExtension(string fullPath, bool includeDot = true)
-        => PathOperation.GetExtension(fullPath, includeDot);
+        => PathHelper.GetExtension(fullPath, includeDot);
 }
