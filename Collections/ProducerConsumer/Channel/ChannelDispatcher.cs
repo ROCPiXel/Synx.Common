@@ -20,7 +20,7 @@ public class ChannelDispatcher<TProducer, TConsumer, TData> : IChannelDispatcher
 
     public CancellationTokenSource CancellationTokenSource { get; set; }
     
-    public Channel<TData> Channel { get; init; }
+    public Channel<TData> Channel { get; set; }
 
     /// <summary>
     /// 生产者队列

@@ -16,7 +16,7 @@ public interface IChannelDispatcher<TProducer, TConsumer, TData>
     /// <summary>
     /// 所管理的主通道
     /// </summary>
-    Channel<TData> Channel { get; init; }
+    Channel<TData> Channel { get; set; }
     
     /// <summary>
     /// 生产者队列
