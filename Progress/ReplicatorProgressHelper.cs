@@ -1,4 +1,4 @@
-﻿namespace Synx.Common.Logging;
+﻿namespace Synx.Common.Progress;
 
 public class ReplicatorProgressHelper
 {

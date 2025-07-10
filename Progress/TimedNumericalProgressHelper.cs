@@ -1,16 +1,19 @@
-﻿using Timer = System.Timers.Timer;
+﻿using Synx.Common.Progress.EventArgs;
+using Timer = System.Timers.Timer;
 
-namespace Synx.Common.Logging;
+namespace Synx.Common.Progress;
 
 /// <summary>
 /// 带有定时器的值(数字)进度助手
 /// </summary>
-public class TimedValueProgressHelper : ValueProgressHelper
+public class TimedNumericalProgressHelper : NumericalProgressHelper
 {
     private readonly Timer _timer;
+    private double _lastProgress;
     public int Count { get; private set; }
-    public EventHandler<ProgressChangedEventArgs> ScheduledHandler { get; set; }
+    public TimedNumericalProgressChangedEventHandler ScheduledHandler { get; set; }
     public int Interval { get; init; }
+    public double Speed { get; private set; }
 
     /// <summary>
     /// 新建一个带有定时器的值(数字)进度助手
@@ -20,14 +23,17 @@ public class TimedValueProgressHelper : ValueProgressHelper
     /// <param name="handler">在进度变化时执行的Handler</param>
     /// <param name="scheduledHandler">定时执行的Handler</param>
     /// <param name="completedAction">结束时的Action</param>
-    public TimedValueProgressHelper(
+    public TimedNumericalProgressHelper(
         double maximum, 
         int interval, 
         Action<double> handler,
-        EventHandler<ProgressChangedEventArgs> scheduledHandler,
+        TimedNumericalProgressChangedEventHandler scheduledHandler,
         Action? completedAction)
         : base(maximum, handler, completedAction)
     {
+        if (interval <= 0)
+            throw new ArgumentOutOfRangeException(nameof(Interval), "Interval must be greater than zero.");
+        
         Interval = interval;
         ScheduledHandler = scheduledHandler;
         _timer = new Timer(Interval);
@@ -39,14 +45,7 @@ public class TimedValueProgressHelper : ValueProgressHelper
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void Start()
     {
-        if (Interval <= 0)
-            throw new ArgumentOutOfRangeException(nameof(Interval), "Interval must be greater than zero.");
-
-        _timer.Elapsed += (_, _) =>
-        {
-            ScheduledHandler.Invoke(this, new ProgressChangedEventArgs(Current, Progress, Maximum, IsCompleted));
-            Count++;
-        };
+        _timer.Elapsed += Elapsed;
         _timer.Start();
     }
 
@@ -64,5 +63,25 @@ public class TimedValueProgressHelper : ValueProgressHelper
     public void Stop()
     {
         _timer.Stop();
+    }
+    
+    /// <summary>
+    /// 计时器触发时执行的方法
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected virtual void Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        Count++;
+            
+        if (Maximum == 0 || Interval <= 0) 
+            Speed = 0;
+        else
+            Speed = Current - _lastProgress;
+            
+        ScheduledHandler.Invoke(
+            this, 
+            new TimedNumericalProgressChangedEventArgs(Current, Progress, Maximum, IsCompleted, Interval, Count, Speed));
+        _lastProgress = Current;
     }
 }

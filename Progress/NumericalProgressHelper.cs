@@ -1,9 +1,9 @@
-﻿namespace Synx.Common.Logging;
+﻿namespace Synx.Common.Progress;
 
 /// <summary>
 /// 值(数字)进度助手
 /// </summary>
-public class ValueProgressHelper : Progress<double>, IValueProgressHelper
+public class NumericalProgressHelper : Progress<double>, INumericalProgressHelper
 {
     private double _current;
 
@@ -15,11 +15,7 @@ public class ValueProgressHelper : Progress<double>, IValueProgressHelper
     public double Current
     { 
         get => _current; 
-        set
-        {
-            _current = value;
-            OnReport(_current);
-        }
+        set => SetCurrent(value);
     }
     /// <summary>
     /// 最大值
@@ -47,7 +43,7 @@ public class ValueProgressHelper : Progress<double>, IValueProgressHelper
     /// <param name="maximum">最大值</param>
     /// <param name="handler">进度变化时执行的Action</param>
     /// <param name="completedAction">结束时的Action</param>
-    public ValueProgressHelper(
+    public NumericalProgressHelper(
         double maximum, 
         Action<double> handler, 
         Action? completedAction = null)
@@ -68,6 +64,12 @@ public class ValueProgressHelper : Progress<double>, IValueProgressHelper
         Maximum = 0;
         Progress = 0;
         IsCompleted = false;
+    }
+
+    public void SetCurrent(double value)
+    {
+        _current = value;
+        OnReport(_current);
     }
 
     /// <summary>

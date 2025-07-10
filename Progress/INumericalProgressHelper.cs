@@ -1,6 +1,6 @@
-﻿namespace Synx.Common.Logging;
+﻿namespace Synx.Common.Progress;
 
-public interface IValueProgressHelper : IProgress<double>
+public interface INumericalProgressHelper : IProgress<double>
 {
     /// <summary>
     /// 当前的进度
@@ -26,4 +26,10 @@ public interface IValueProgressHelper : IProgress<double>
     /// 重置
     /// </summary>
     void Reset();
+    
+    /// <summary>
+    /// 设置进度
+    /// </summary>
+    /// <param name="value"></param>
+    void SetCurrent(double value);
 }
