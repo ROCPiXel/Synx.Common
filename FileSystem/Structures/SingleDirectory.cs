@@ -138,11 +138,13 @@ public class SingleDirectory : IFileObject<SingleDirectory>
     /// <summary>
     /// 创建本实例
     /// </summary>
+    /// <remarks>更改不会应用到本实例上</remarks>
     /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
     /// <param name="suffix"></param>
-    public void Create(FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
+    /// <returns></returns>
+    public SingleDirectory? Create(FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
     {
-        FileObjectOperation<SingleDirectory>.Create(this, fileConflictResolution, suffix);
+        return FileObjectOperation<SingleDirectory>.Create(this, fileConflictResolution, suffix);
     }
     
     /// <summary>

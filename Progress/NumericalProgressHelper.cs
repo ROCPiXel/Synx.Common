@@ -58,7 +58,7 @@ public class NumericalProgressHelper : Progress<double>, INumericalProgressHelpe
     /// <summary>
     /// 重置
     /// </summary>
-    public void Reset()
+    public virtual void Reset()
     {
         Current = 0;
         Maximum = 0;

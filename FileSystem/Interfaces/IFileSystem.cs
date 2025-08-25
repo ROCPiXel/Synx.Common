@@ -7,7 +7,7 @@
 public interface IFileSystem
 {
     /// <summary>代表文件系统的流</summary>
-    public FileStream? Open(string fullPath,
+    FileStream? Open(string fullPath,
                             FileMode mode,
                             FileAccess? access = FileAccess.ReadWrite,
                             FileShare? share = FileShare.None, 
@@ -15,17 +15,17 @@ public interface IFileSystem
                             FileOptions? options = FileOptions.None);
 
     /// <summary>判断存在</summary>
-    public bool Exists(string fullPath);
+    bool Exists(string fullPath);
     
     /// <summary>创建</summary>
-    public void Create(string fullPath);
+    void Create(string fullPath);
     
     /// <summary>删除</summary>
-    public void Delete(string fullPath);
+    void Delete(string fullPath);
     
     /// <summary>移动到（原生操作而并非重命名）</summary>
-    public void Move(string sourceFPath, string targetFPath);
+    void Move(string sourceFPath, string targetFPath);
 
     /// <summary>获取路径的后缀名，文件与目录路径上的唯一（？）区别</summary>
-    public string GetExtension(string fullPath, bool includeDot = true);
+    string GetExtension(string fullPath, bool includeDot = true);
 }

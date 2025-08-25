@@ -15,7 +15,6 @@ public static class FileObjectOperation<TFileSysObj>
     where TFileSysObj: class, IFileObject<TFileSysObj>, new()
 {
     /// <summary>
-    /// Create: tFunc
     /// 创建文件对象，重载时文件夹名加上前缀"\\"
     /// </summary>
     /// <param name="fullPath">完整路径</param>
@@ -31,7 +30,8 @@ public static class FileObjectOperation<TFileSysObj>
         TFileSysObj newFileSysObj;
 
         // 基础情况：存在且保持，两者冲突
-        if (TFileSysObj.FileSystem.Exists(fullPath) && fileConflictResolution == FileConflictResolution.Keep) return null;
+        if (TFileSysObj.FileSystem.Exists(fullPath) && fileConflictResolution == FileConflictResolution.Keep) 
+            return null;
 
         // 文件不存在：创建，忽略选项
         // if (!TFileSysObj.FileSystem.Exists(fullPath)) finalPath = fullPath;
@@ -51,7 +51,9 @@ public static class FileObjectOperation<TFileSysObj>
                 break;
         }
         
+        // 创建包含的可能未创建的文件夹
         Directory.CreateDirectory(PathHelper.GetParentPath(finalPath));
+        
         try
         {
             TFileSysObj.FileSystem.Create(finalPath);
@@ -66,7 +68,7 @@ public static class FileObjectOperation<TFileSysObj>
             // 创建实例并更新路径相关信息
             newFileSysObj = new TFileSysObj()
             {
-                Path = new CPath(finalPath) //???
+                Path = new CPath(finalPath)
             };
             newFileSysObj.Path.Sync();
         }
@@ -84,16 +86,16 @@ public static class FileObjectOperation<TFileSysObj>
     public static TFileSysObj? Create(string name, CPath parentCPath,
         FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix) 
         => Create(Path.Combine([parentCPath.Absolute, name]), fileConflictResolution, suffix);
-
-    public static TFileSysObj? Create(TFileSysObj fileSysObj,
+    
+    public static TFileSysObj? Create(TFileSysObj? fileSysObj,
         FileConflictResolution fileConflictResolution = FileConflictResolution.Keep, string suffix = Definition.DefaultSuffix)
     {
-        fileSysObj = Create(fileSysObj.Path.Absolute, fileConflictResolution, suffix) ?? fileSysObj;
-        return fileSysObj;
+        if (fileSysObj == null) throw new ArgumentNullException(nameof(fileSysObj));
+        var creation = Create(fileSysObj.Path.Absolute, fileConflictResolution, suffix);
+        return creation;
     }
 
     /// <summary>
-    /// Delete: tFunc
     /// 删除文件对象，重载时文件夹名注意添加"\\"
     /// </summary>
     /// <param name="fullPath">完整路径</param>
@@ -124,7 +126,6 @@ public static class FileObjectOperation<TFileSysObj>
     public static bool Delete(TFileSysObj fileSysObj) => Delete(fileSysObj.Path.Absolute);
 
     /// <summary>
-    /// Rename: tFunc
     /// 重命名文件实例
     /// </summary>
     /// <param name="sourceFPath">源路径</param>

@@ -1,7 +1,5 @@
 ﻿namespace Synx.Common.Progress.EventArgs;
 
-public delegate void TimedNumericalProgressChangedEventHandler(object? sender, TimedNumericalProgressChangedEventArgs e);
-
 /// <summary>
 /// 继承: <see cref="NumericalProgressChangedEventArgs"/>
 /// 提供计时进度助手的间隔与计数

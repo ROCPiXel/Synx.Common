@@ -1,4 +1,5 @@
 ﻿using Synx.Common.Progress.EventArgs;
+using Synx.Common.Progress.Handler;
 using Timer = System.Timers.Timer;
 
 namespace Synx.Common.Progress;
@@ -8,7 +9,7 @@ namespace Synx.Common.Progress;
 /// </summary>
 public class TimedNumericalProgressHelper : NumericalProgressHelper
 {
-    private readonly Timer _timer;
+    private Timer _timer;
     private double _lastProgress;
     public int Count { get; private set; }
     public TimedNumericalProgressChangedEventHandler ScheduledHandler { get; set; }
@@ -36,6 +37,27 @@ public class TimedNumericalProgressHelper : NumericalProgressHelper
         
         Interval = interval;
         ScheduledHandler = scheduledHandler;
+        _timer = new Timer(Interval);
+    }
+
+    /// <summary>
+    /// 重置计数相关属性
+    /// </summary>
+    public override void Reset()
+    {
+        base.Reset();
+        Speed = 0;
+        Count = 0;
+        _lastProgress = 0;
+    }
+
+    /// <summary>
+    /// 重置计时器
+    /// </summary>
+    public void ResetTimer()
+    {
+        _timer.Stop();
+        _timer.Close();
         _timer = new Timer(Interval);
     }
 
