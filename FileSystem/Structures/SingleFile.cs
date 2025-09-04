@@ -78,6 +78,7 @@ public class SingleFile : IFileObject<SingleFile>
     /// <summary>
     /// 使用实例信息创建文件
     /// </summary>
+    /// <remarks>更改不会应用到本实例上</remarks>
     /// <param name="fileConflictResolution">创建方式<see cref="FileConflictResolution"/></param>
     /// <param name="suffix"></param>
     /// <returns></returns>

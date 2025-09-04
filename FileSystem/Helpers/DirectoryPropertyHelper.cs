@@ -33,6 +33,7 @@ public static class DirectoryPropertyHelper
     /// <summary>
     /// GetDepth: func
     /// 获取目录深度，当前层级为0，逐级各加一
+    /// 警告：可能的递归调用
     /// </summary>
     /// <param name="directoryInfo"></param>
     /// <param name="maxDepth"></param>
@@ -104,6 +105,7 @@ public static class DirectoryPropertyHelper
     /// <summary>
     /// Traverse: func
     /// 遍历整个文件夹（指定层级）
+    /// 警告：可能的递归调用
     /// </summary>
     /// <param name="singleDirectory"></param>
     /// <param name="targetDepth"></param>
@@ -144,6 +146,7 @@ public static class DirectoryPropertyHelper
     /// <summary>
     /// ExpandChild: func
     /// 根据指定项<see cref="SingleDirectory.ChildCPathDictionary"/>展开至平面字典中
+    /// 警告：可能的递归调用
     /// </summary>
     /// <param name="source"></param>
     /// <param name="targetDepth"></param>

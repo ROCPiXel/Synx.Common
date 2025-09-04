@@ -14,13 +14,9 @@ public class DirectoryFileSystem : FileSystemBase<DirectoryFileSystem>
 
     public override bool Exists(string fullPath) 
         => Directory.Exists(fullPath);
-
-    //TODO: 这里的创建目录会导致文件流无法打开，考虑更换泛型实现
-    public override FileStream? Create(string fullPath)
-    {
-        Directory.CreateDirectory(fullPath);
-        return null;
-    }
+    
+    public override void Create(string fullPath)
+        => Directory.CreateDirectory(fullPath);
     
     public override void Delete(string fullPath) 
         => Directory.Delete(fullPath);

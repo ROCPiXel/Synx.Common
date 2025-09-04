@@ -4,7 +4,8 @@ using Synx.Common.FileSystem.Helpers;
 namespace Synx.Common.FileSystem.Structures;
 
 /// <summary>
-/// CPath - CompositePath
+/// CPath - record struct
+/// C Path: Composite Path
 /// 复合路径，含有绝对与相对路径
 /// </summary>
 public record struct CPath
@@ -158,7 +159,7 @@ public record struct CPath
     }
     
     /// <summary>
-    /// CPath构造函数，默认传入绝对路径
+    /// 构造函数，默认传入绝对路径
     /// </summary>
     /// <param name="absolutePath"></param>
     /// <param name="basePath"></param>
@@ -169,7 +170,7 @@ public record struct CPath
     }
 
     /// <summary>
-    /// CPath构造函数，传入后拼接路径并更新绝对路径
+    /// 构造函数，传入后拼接路径并更新绝对路径
     /// </summary>
     /// <param name="paths"></param>
     public CPath(params string[] paths):

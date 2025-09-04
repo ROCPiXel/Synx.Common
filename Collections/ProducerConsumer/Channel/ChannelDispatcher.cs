@@ -18,8 +18,14 @@ public class ChannelDispatcher<TProducer, TConsumer, TData> : IChannelDispatcher
     private ICollection<TProducer> _producers = new List<TProducer>();
     private ICollection<TConsumer> _consumers = new List<TConsumer>();
 
+    /// <summary>
+    /// 取消Token源
+    /// </summary>
     public CancellationTokenSource CancellationTokenSource { get; set; }
     
+    /// <summary>
+    /// 主Channel 用于传输数据
+    /// </summary>
     public Channel<TData> Channel { get; set; }
 
     /// <summary>

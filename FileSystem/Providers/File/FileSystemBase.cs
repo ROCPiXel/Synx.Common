@@ -9,25 +9,9 @@ namespace Synx.Common.FileSystem.Providers.File;
 public abstract class FileSystemBase<TFileSystem> : IFileSystem
     where TFileSystem : class, IFileSystem
 {
-    private static volatile TFileSystem? _instance = null;
-    private static readonly object _instanceLock = new object();
-    public static TFileSystem Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                lock (_instanceLock)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = (TFileSystem)Activator.CreateInstance(typeof(TFileSystem), nonPublic:true)!;
-                    }
-                }
-            }
-            return _instance;
-        }
-    }
+    private static volatile Lazy<TFileSystem> _instance = 
+        new(() => (TFileSystem)Activator.CreateInstance(typeof(TFileSystem), nonPublic: true)!);
+    public static TFileSystem Instance => _instance.Value;
     protected FileSystemBase(){}
 
     public abstract FileStream? Open(string fullPath,
@@ -39,7 +23,7 @@ public abstract class FileSystemBase<TFileSystem> : IFileSystem
 
     public abstract bool Exists(string fullPath);
     
-    public abstract FileStream Create(string fullPath);
+    public abstract void Create(string fullPath);
     
     public abstract void Delete(string fullPath);
     

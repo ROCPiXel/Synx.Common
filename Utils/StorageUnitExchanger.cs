@@ -32,7 +32,7 @@ public static class StorageUnitExchanger
     /// <param name="to">目标单位，可以使用BasicApproaches的常量定义</param>
     /// <param name="space">源容量</param>
     /// <returns>目标单位对应的容量</returns>
-    public static double Change(long space, long from = Definition.Byte, long to = Definition.GiB)
+    public static double Change(this long space, long from = Definition.Byte, long to = Definition.GiB)
     {
         if (space == 0 || from == 0) return 0;
         double fromByte = space * from;
@@ -64,7 +64,7 @@ public static class StorageUnitExchanger
     /// <param name="unitBase">若切换为1000请设置新的对应表</param>
     /// <param name="format">详见string.Format()</param>
     /// <returns></returns>
-    public static string ChangeAuto(long space, long from = 1, int unitBase = 1024, string format = "F")
+    public static string ChangeAuto(this long space, long from = 1, int unitBase = 1024, string format = "F")
     {
         if (space == 0) return "0B";
         long spaceByte = space * (from);
