@@ -11,8 +11,10 @@ public class TimedNumericalProgressChangedEventArgs : NumericalProgressChangedEv
     public readonly double Speed;
     
     public TimedNumericalProgressChangedEventArgs(
-        double current, double progress, double maximum, bool isCompleted,
-        int interval, int count, double speed)
+        double current, double progress, double maximum, 
+        bool isCompleted,
+        int interval, int count, 
+        double speed)
         : base(current, progress, maximum, isCompleted)
     {
         Interval = interval;
